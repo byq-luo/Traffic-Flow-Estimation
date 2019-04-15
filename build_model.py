@@ -153,3 +153,8 @@ def average_estimation(x, y):
     error *= 100
     error /= x.shape[0]
     return error
+
+def mean_absolute_percentage_error(real, est):
+    """Calculates the mean absolute precentage error.
+    """
+    return np.mean(np.abs((real - est) / real)) * 100
