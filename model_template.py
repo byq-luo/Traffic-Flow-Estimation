@@ -27,9 +27,6 @@ OCT = 10
 NOV = 11
 DEC = 12 
 
-
-
-
 #Read and scale data
 data = bm.read_data(FILE_NAME)
 
@@ -74,9 +71,9 @@ regressor = Sequential()
 #adding layer(s) to model
 regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], x_train.shape[2])))
 regressor.add(Dropout(0.5))
-regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], x_train.shape[2])))
+regressor.add(LSTM(units = 50, return_sequences = True ))
 regressor.add(Dropout(0.5))
-regressor.add(LSTM(units = 33, return_sequences = True, input_shape = (x_train.shape[1], x_train.shape[2])))
+regressor.add(LSTM(units = 33, return_sequences = True))
 
 regressor.add(Flatten())
 regressor.add(Dense(units = 1))
@@ -105,7 +102,7 @@ for i in range(0, results.shape[0] - 24, 12):
 #saving daily errors and errors in rush hours
 np.savetxt('daily_error_#'+str(MODEL_ID)+' .csv', daily_error, delimiter = ",", fmt = '%s')
 np.savetxt('rush_hours_errors_#'+str(MODEL_ID)+' .csv', rush_hour_errors, delimiter = ",", fmt = '%s')
-
+print(np.mean(rush_hour_errors))
 
 #saving estimated values for test data
 data =  data[data.index.month == MAY]

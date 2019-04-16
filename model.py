@@ -26,9 +26,6 @@ OCT = 10
 NOV = 11
 DEC = 12 
 
-
-
-
 #Read and scale data
 data = bm.read_data(FILE_NAME)
 
@@ -73,9 +70,10 @@ regressor = Sequential()
 #adding layer(s) to model
 regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], x_train.shape[2])))
 regressor.add(Dropout(0.5))
-regressor.add(LSTM(units = 50, return_sequences = True, input_shape = (x_train.shape[1], x_train.shape[2])))
+regressor.add(LSTM(units = 50, return_sequences = True ))
 regressor.add(Dropout(0.5))
-regressor.add(LSTM(units = 33, return_sequences = True, input_shape = (x_train.shape[1], x_train.shape[2])))
+regressor.add(LSTM(units = 33, return_sequences = True))
+
 
 regressor.add(Flatten())
 regressor.add(Dense(units = 1))
@@ -83,7 +81,7 @@ regressor.add(Dense(units = 1))
 #compiling the model with  mean_absolute_percentage_error and adam optimizer
 regressor.compile(optimizer = 'adam', loss = 'mean_absolute_percentage_error')
 #fitting model with training sets and validation set
-regressor.fit(x_train, y_train, epochs = 1, batch_size = 32, validation_data = (x_test, y_test))
+regressor.fit(x_train, y_train, epochs = 50, batch_size = 32, validation_data = (x_test, y_test))
 results = regressor.predict(x_test)
 
 #extracting daily errors
@@ -104,7 +102,7 @@ for i in range(0, results.shape[0] - 24, 12):
 #saving daily errors and errors in rush hours
 np.savetxt('daily_error_#'+str(MODEL_ID)+' .csv', daily_error, delimiter = ",", fmt = '%s')
 np.savetxt('rush_hours_errors_#'+str(MODEL_ID)+' .csv', rush_hour_errors, delimiter = ",", fmt = '%s')
-
+print(np.mean(rush_hour_errors))
 
 #saving estimated values for test data
 data =  data[data.index.month == MAY]
