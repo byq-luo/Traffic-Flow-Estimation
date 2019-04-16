@@ -46,6 +46,9 @@
     <Compile Include="model.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="model_template.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="oıtlier_hyperparameter_optimizing.py" />
     <Compile Include="percentages.py">
       <SubType>Code</SubType>

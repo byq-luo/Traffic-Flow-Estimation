@@ -119,20 +119,31 @@ def find_indexes_of_month(df, month):
     df.set_index(['Date'], drop = True, inplace = True)
     return indexes
 
-def build_sets(df, indexes, distance, time_interval):
+def build_sets(df, indexes, distance, time_back, time_forward, sample_frequency):
     """ Builds sets for LSTM model as either training or test based on given purpose
 
     :param df: dataframe to be used to exctract sets out of it
     :param indexes: indexes that specifies interval of aimed data 
-    :param distance: difference between x set starting index and y set starting index
-    :param time_interval: difference plus one between x set starting index and end index
+    :param distance: difference between x and y in minutes
+    :param time_back: how many minutes will window go back from that difference
+    :param time_forward: how many minutes will window go forward from that difference
+    :param sample_freuqency: the time difference between two entries in given df.
     :return: np array of x and y sets
+
+    Demonstration:
+    Let's assume; 
+    The data is taken each 5 minutes. So, sample_frequency should be 5.
+    The time difference between x and y is one week. distance = 7 * 24 * 60.
+    It isn decided to go 15 minutes back and forward for x. So, time_back = time_forward = 15
     """
     x = []
     y = []
+    index_difference = int(distance / sample_frequency)
+    index_back = int(time_back / sample_frequency)
+    index_forward = int(time_forward / sample_frequency) + 1
     arr = df.values
     for i in indexes:
-        x.append(arr[i - distance:i - distance + time_interval,:])
+        x.append(arr[i - index_difference - time_back:i - index_difference + time_forward,:])
         y.append(arr[i, -1])
     return np.array(x), np.array(y)
 

@@ -1,8 +1,17 @@
+
 #importing base module in order to prepare LSTM model
 import build_model as bm
 import pandas as pd
 import numpy as np
 import csv
+
+FILE_NAME = "preprocessed_471.csv"
+DISTANCE = 7 * 24 * 60
+TIME_BACK = 15
+TIME_FORWARD = 15
+SAMPLE_FREQUENCY = 5
+MODEL_ID = 1
+RUSH_SPEED = 40
 
 # index values of months (used for given start of sets for test and training)
 JAN = 1
@@ -18,9 +27,8 @@ OCT = 10
 NOV = 11
 DEC = 12 
 
-FILE_NAME = "preprocessed_471.csv"
-PREVIOUS_WEEK_DATA = 2019
-NUMBER_OF_DATA_FROM_PREV_WEEK = 7
+
+
 
 #Read and scale data
 data = bm.read_data(FILE_NAME)
@@ -45,18 +53,16 @@ data.drop(['Speed'], axis = 'columns' ,inplace = True)
 #build trainig and test sets
 indexes = bm.find_indexes_of_month(data, APR)
 #indexes.extend(bm.find_indexes_of_month(data, MAY))
-#indexes.extend(bm.find_indexes_of_month(data, JUN))
-x_train, y_train = bm.build_sets(data, indexes, PREVIOUS_WEEK_DATA, NUMBER_OF_DATA_FROM_PREV_WEEK) # 2019 bir hafta sonrası, 7 yarım saat içim
+x_train, y_train = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
+                                 TIME_FORWARD, SAMPLE_FREQUENCY)
 
-indexes = bm.find_indexes_of_month(data, MAY) 
-x_test, y_test = bm.build_sets(data, indexes, PREVIOUS_WEEK_DATA, NUMBER_OF_DATA_FROM_PREV_WEEK)
+indexes = bm.find_indexes_of_month(data, MAY)
+x_test, y_test = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
+                                 TIME_FORWARD, SAMPLE_FREQUENCY)
 
 #one week from test set starting from may 2 (cause may 1 is holiday)
 x_test = x_test[2016:4032,:,:]
 y_test = y_test[2016:4032]
-print(type(x_test))
-
-
 
 #importing keras model and layers to construct LSTM model
 from keras.models import Sequential
@@ -79,28 +85,31 @@ regressor.add(Dense(units = 1))
 regressor.compile(optimizer = 'adam', loss = 'mean_absolute_percentage_error')
 #fitting model with training sets and validation set
 regressor.fit(x_train, y_train, epochs = 1, batch_size = 32, validation_data = (x_test, y_test))
-
 results = regressor.predict(x_test)
+
+#extracting daily errors
 daily_error = []
 for i in range(0, results.shape[0] - 288, 288):
     error = bm.mean_absolute_percentage_error(y_test[i:i + 288], results[i:i + 288])
     daily_error.append(error)
 
+#extracting errors in rush hours
 unscaled = bm.inverse_scale(sc, results)
 rush_hour_errors = []
 for i in range(0, results.shape[0] - 24, 12):
     trimmed_res = results[i:i + 24]
-    if unscaled[i:i+24].mean() < 40:
+    if unscaled[i:i+24].mean() < RUSH_SPEED:
         error = bm.mean_absolute_percentage_error(y_test[i:i + 24], trimmed_res)
         rush_hour_errors.append(error)
 
-np.savetxt('daily_errors.csv', daily_error, delimiter = ",", fmt = '%s')
-np.savetxt('rush_hours_errors.csv', rush_hour_errors, delimiter = ",", fmt = '%s')
+#saving daily errors and errors in rush hours
+np.savetxt('daily_error_#'+str(MODEL_ID)+' .csv', daily_error, delimiter = ",", fmt = '%s')
+np.savetxt('rush_hours_errors_#'+str(MODEL_ID)+' .csv', rush_hour_errors, delimiter = ",", fmt = '%s')
 
-"""
-data =  data[data.index.month == JULY_INDEX]
-data =  pd.DataFrame(index = data.index[0:2016], data = sc.inverse_transform(y_test.reshape(-1,1)), columns = ['actual speed'])
+
+#saving estimated values for test data
+data =  data[data.index.month == MAY]
+data =  pd.DataFrame(index = data.index[2016:4032], data = sc.inverse_transform(y_test.reshape(-1,1)), columns = ['actual speed'])
 preds = pd.DataFrame(data = sc.inverse_transform(results), columns = ['predicted speed'], index = data.index)
 dt = pd.concat([data, preds], axis = 1)
-dt.to_csv("three_month_train_one_test.csv")
-"""
+dt.to_csv("Model_#"+str(MODEL_ID)+"_Estimations.csv")
