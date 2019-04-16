@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from data_fusion_transformation import divide_hours
+from keras import losses
+from tensorflow import Session
 
 def read_data(file_name, parse_dates = ['Date'], index_col = ['Date']):
     """Reads data from file into dataframe with parsing Date column into datetime object
@@ -168,4 +170,7 @@ def average_estimation(x, y):
 def mean_absolute_percentage_error(real, est):
     """Calculates the mean absolute precentage error.
     """
-    return np.mean(np.abs((real - est) / real)) * 100
+    sess = Session()
+    with sess.as_default():
+        tensor = losses.mean_absolute_percentage_error(real, est)
+        return tensor.eval()[-1]

@@ -81,7 +81,7 @@ regressor.add(Dense(units = 1))
 #compiling the model with  mean_absolute_percentage_error and adam optimizer
 regressor.compile(optimizer = 'adam', loss = 'mean_absolute_percentage_error')
 #fitting model with training sets and validation set
-regressor.fit(x_train, y_train, epochs = 50, batch_size = 32, validation_data = (x_test, y_test))
+regressor.fit(x_train, y_train, epochs = 1, batch_size = 32, validation_data = (x_test, y_test))
 results = regressor.predict(x_test)
 
 #extracting daily errors
