@@ -99,7 +99,7 @@ def join_hour_one_hot(df):
     """
     hours =  pd.DataFrame(data =df.index.hour,
                         index = df.index)
-    return merge_one_hot_to_data(df, hour)
+    return merge_one_hot_to_data(df, hours)
 
 def get_month(date):
     """ Gets month from datetime object
@@ -160,7 +160,7 @@ def average_estimation(x, y):
     for i in range(x.shape[0]):
         sum = 0
         for j in range(x.shape[1]):
-            sum += x_test[i, j, -1]
+            sum += x[i, j, -1]
         estimation = sum / x.shape[1]
         error += (abs(estimation - y[i])) / y[i]
     error *= 100
@@ -170,7 +170,10 @@ def average_estimation(x, y):
 def mean_absolute_percentage_error(real, est):
     """Calculates the mean absolute precentage error.
     """
-    sess = Session()
-    with sess.as_default():
-        tensor = losses.mean_absolute_percentage_error(real, est)
-        return tensor.eval()[-1]
+    error = 0
+    for i in range(real.shape[0]):
+        temp = abs(real[i] - est[i])
+        temp /= real[i]
+        error += temp
+
+    return (error * 100) / real.shape[0]
