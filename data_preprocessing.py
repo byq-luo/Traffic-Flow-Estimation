@@ -7,10 +7,10 @@ import numpy as np
 import sys
 import pandas as pd
 
-datetime_format = "%Y-%m-%d %H:%M:%S"
+datetime_format = "%d/%m/%Y %H:%M"
 
 
-def draw_progress_bar(percent, bar_len = 50):
+def draw_progress_bar(percent, bar_len=50):
     """Draws the percentage bar for a long process.
 
     :param percent: Between 0 and 1
@@ -45,7 +45,7 @@ def detect_outlier_for_batch(l, sigma):
 
 
 def find_outliers_with_convolution(
-        data, time_interval, sigma, column_of_date = 0, column_of_speed = 1):
+        data, time_interval, sigma, column_of_date=0, column_of_speed=1):
     """Convolutes through all the data and finds the outliers within every window.
 
     :param data: Given data. Matrix
@@ -61,8 +61,8 @@ def find_outliers_with_convolution(
         percent = i / len(data)
         draw_progress_bar(percent)
         trimmed, temp = trim_the_data(
-            data, data[i, column_of_date], 
-            data[i,column_of_date] + timedelta(minutes = time_interval), 
+            data, data[i, column_of_date],
+            data[i, column_of_date] + timedelta(minutes=time_interval),
             column_of_date, i)
         temp_outliers = detect_outlier_for_batch(trimmed.transpose()[column_of_speed], sigma)
         outlier_indexes = np.append(outlier_indexes, temp_outliers + i)
@@ -71,7 +71,7 @@ def find_outliers_with_convolution(
     return outlier_indexes
 
 
-def trim_the_data(data, starting_datetime, ending_datetime, column_of_date = 0, starting_index = 0):
+def trim_the_data(data, starting_datetime, ending_datetime, column_of_date=0, starting_index=0):
     """Trims the data into small chunks.
 
     :param data: Data that needed to be trimmed.
@@ -90,7 +90,7 @@ def trim_the_data(data, starting_datetime, ending_datetime, column_of_date = 0, 
     return data[starting_index:i], i
 
 
-def downsample_the_data(data, starting_date,time_interval, column_of_date = 0, column_of_speed = 1):
+def downsample_the_data(data, starting_date, time_interval, column_of_date=0, column_of_speed=1):
     """Reduces the entry in data.
 
     :param data: Data that needed to be downsamppled.
@@ -106,21 +106,21 @@ def downsample_the_data(data, starting_date,time_interval, column_of_date = 0, c
     while i < len(data) - 1:
         percent = i / len(data)
         draw_progress_bar(percent)
-        trimmed, temp = trim_the_data(data, 
-            starting_date + timedelta(minutes = time_index * time_interval), 
-            starting_date + timedelta(minutes = (time_index + 1) * time_interval), 
-            column_of_date, i)
+        trimmed, temp = trim_the_data(data,
+                                      starting_date + timedelta(minutes=time_index * time_interval),
+                                      starting_date + timedelta(minutes=(time_index + 1) * time_interval),
+                                      column_of_date, i)
         if len(trimmed) > 0:
-            mean = trimmed[:,column_of_speed].mean()
-            appended = np.array([starting_date + timedelta(minutes = time_index * time_interval), mean])
+            mean = trimmed[:, column_of_speed].mean()
+            appended = np.array([starting_date + timedelta(minutes=time_index * time_interval), mean])
             downsampled_data = np.append(downsampled_data, appended)
         elif len(downsampled_data) > 0:
-            appended = np.array([starting_date + timedelta(minutes = time_index * time_interval), -1])
+            appended = np.array([starting_date + timedelta(minutes=time_index * time_interval), -1])
             downsampled_data = np.append(downsampled_data, appended)
         i = temp
         time_index += 1
     draw_progress_bar(1)
-    return downsampled_data.reshape([int(downsampled_data.shape[0] / 2),2])
+    return downsampled_data.reshape([int(downsampled_data.shape[0] / 2), 2])
 
 
 def clean_outliers(old_data, outlier_indexes):
@@ -129,11 +129,11 @@ def clean_outliers(old_data, outlier_indexes):
     :param old_data: data with outliers
     :param outlier_indexes: indexes of outliers in the data
     :return: returns data without outliers
-    
+
     """
     if len(outlier_indexes) == 0:
         return old_data
-    return np.delete(old_data, outlier_indexes, axis = 0)
+    return np.delete(old_data, outlier_indexes, axis=0)
 
 
 def split_direction_and_speed(str):
@@ -156,7 +156,7 @@ def split_direction_and_speed(str):
 
 def preprocess_and_save_data(
         load_name, save_name, time_window_outlier, sigma,
-        time_window_downsample, column_of_date = 0, column_of_speed = 1):
+        time_window_downsample, column_of_date=0, column_of_speed=1):
     """Reads data from CSV file, removes outliers, downsamples it and saves it to CSV file again.
 
     :param load_name: Name of the file that data will be loaded.
@@ -171,19 +171,19 @@ def preprocess_and_save_data(
     data = pd.read_csv(load_name)
     print("Data was read from file...")
     print("Converting str to datetime object...")
+
     vals = data.values
-    for i in  range(len(vals)):
-        draw_progress_bar(i / len(vals))
+    for i in range(len(vals)):
         vals[i, 0] = datetime.strptime(vals[i, 0], datetime_format)
-    draw_progress_bar(1)
+
     print("\nOutliers will be detected...")
     outliers = find_outliers_with_convolution(
         vals, time_window_outlier, sigma, column_of_date, column_of_speed
     )
     vals = clean_outliers(vals, outliers)
     print("\nData will be downsampled...")
-    downsampled = downsample_the_data(vals, vals[0,column_of_date], time_window_downsample)
-    data = pd.DataFrame(data = downsampled, columns = data.columns)
+    downsampled = downsample_the_data(vals, vals[0, column_of_date], time_window_downsample)
+    data = pd.DataFrame(data=downsampled, columns=data.columns)
     print("\nData will be saved to a CSV file...")
-    data.to_csv(save_name, index = False)
+    data.to_csv(save_name, index=False)
 
