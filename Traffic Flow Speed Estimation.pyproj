@@ -5,8 +5,9 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{046d77e4-c5c0-4db6-afd6-3113e0e4ee66}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>model.py</StartupFile>
-    <SearchPath />
+    <StartupFile>build_model.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
@@ -19,13 +20,6 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="Information\ReadMe.txt" />
-    <Content Include="Insert Queries\precipitation_queries.txt" />
-    <Content Include="Insert Queries\snow_depth_queries.txt" />
-    <Content Include="Insert Queries\sunshine_insert.txt" />
-    <Content Include="Insert Queries\tempertature_queries.txt" />
-    <Content Include="Insert Queries\visibility_queries.txt" />
-    <Content Include="Insert Queries\wind_speed_queries.txt" />
     <Content Include="wind_speed_queries.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -36,14 +30,12 @@
     <Compile Include="data_preprocessing.py" />
     <Compile Include="extract_data_summary.py" />
     <Compile Include="file_operations.py" />
+    <Compile Include="model.py" />
     <Compile Include="kml_manipulation.py" />
     <Compile Include="merge_weather_Data.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="build_model.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="model.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="model_template.py">
@@ -54,10 +46,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="sql_server_processing.py" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Information" />
-    <Folder Include="Insert Queries" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.5" />
