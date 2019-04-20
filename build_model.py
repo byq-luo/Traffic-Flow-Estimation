@@ -22,7 +22,7 @@ def read_data(file_name, parse_dates = ['Date'], index_col = ['Date']):
     """
     return pd.read_csv(file_name, parse_dates = parse_dates, index_col = index_col)
 
-def scale_Data(df):
+def scale_data(df):
 	""" Normalizes data in order to scale it between 0 and 1
 	
 	:param df: DataFrame which includes data to be scaled
@@ -145,8 +145,10 @@ def build_sets(df, indexes, distance, time_back, time_forward, sample_frequency)
     index_forward = int(time_forward / sample_frequency) + 1
     arr = df.values
     for i in indexes:
-        x.append(arr[i - index_difference - time_back:i - index_difference + time_forward,:])
-        y.append(arr[i, -1])
+        if (0 not in arr[i - index_difference - time_back:i - index_difference + time_forward,-1] and
+                arr[i, -1] != 0): #exclude missing values. They are equal to 0 after scaling
+            x.append(arr[i - index_difference - index_back:i - index_difference + index_forward,:])
+            y.append(arr[i, -1])
     return np.array(x), np.array(y)
 
 def average_estimation(x, y):

@@ -5,12 +5,12 @@ import numpy as np
 
 
 MODEL_ID = 2
-TIME_BACK = 120
-TIME_FORWARD = 120
+TIME_BACK = 15
+TIME_FORWARD = 15
 SAMPLE_FREQUENCY = 5
 DISTANCE = 7 * 24 * 60
 FILE_NAME = "preprocessed_471.csv"
-EPOCH = 30
+EPOCH = 50
 
 # index values of months (used for given start of sets for test and training)
 JAN = 1
@@ -28,7 +28,7 @@ DEC = 12
 
 #Read and scale data
 data = bm.read_data(FILE_NAME)
-data['Scaled'], sc = bm.scale_Data(data)
+data['Scaled'], sc = bm.scale_data(data)
 
 #CODE FOR CHECKING THE MISSING DATA
 '''
@@ -47,20 +47,18 @@ data.drop(['Speed'], axis='columns', inplace=True)
 march_absent_count = 8 * 288 + 12 * 8 + int(TIME_BACK / SAMPLE_FREQUENCY) + int(DISTANCE / SAMPLE_FREQUENCY)
 #build trainig and test sets
 indexes = bm.find_indexes_of_month(data, MAR)
-indexes = indexes[march_absent_count:]
 indexes.extend(bm.find_indexes_of_month(data, APR))
 indexes.extend(bm.find_indexes_of_month(data, MAY))
 x_train, y_train = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
                                  TIME_FORWARD, SAMPLE_FREQUENCY)
-
 indexes = bm.find_indexes_of_month(data, JUN)
 x_test, y_test = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
                                  TIME_FORWARD, SAMPLE_FREQUENCY)
-print(x_test.shape, y_train.shape)
+print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
+print(x_train[0,:,-1])
 #one week from test set starting from may 2 (cause may 1 is holiday)
 x_test = x_test[:2016,:,:]
 y_test = y_test[:2016]
-
 
 #importing keras model and layers to construct LSTM model
 from keras.models import Sequential
@@ -83,7 +81,8 @@ regressor.add(Dense(units=1))
 #compiling the model with  mean_absolute_percentage_error and adam optimizer
 regressor.compile(optimizer='adam', loss='mean_absolute_percentage_error')
 #fitting model with training sets and validation set
-regressor.fit(x_train, y_train, epochs = EPOCH, batch_size=32, validation_data=(x_test, y_test))
+history = regressor.fit(x_train, y_train, epochs = EPOCH, batch_size=32, validation_data=(x_test, y_test))
+bm.save_val_loss_plot(history, "validation_loss_plot.png")
 results = regressor.predict(x_test)
 
 

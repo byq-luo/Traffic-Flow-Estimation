@@ -27,7 +27,7 @@ DEC = 12
 
 #Read and scale data
 data = bm.read_data(FILE_NAME)
-data['Scaled'], sc = bm.scale_Data(data)
+data['Scaled'], sc = bm.scale_data(data)
 
 #CODE FOR CHECKING THE MISSING DATA
 '''
