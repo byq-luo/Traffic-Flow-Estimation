@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 
-MODEL_ID = 2
+MODEL_ID = 1
 TIME_BACK = 15
 TIME_FORWARD = 15
 SAMPLE_FREQUENCY = 5
@@ -54,8 +54,6 @@ x_train, y_train = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
 indexes = bm.find_indexes_of_month(data, JUN)
 x_test, y_test = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
                                  TIME_FORWARD, SAMPLE_FREQUENCY)
-print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
-print(x_train[0,:,-1])
 #one week from test set starting from may 2 (cause may 1 is holiday)
 x_test = x_test[:2016,:,:]
 y_test = y_test[:2016]
@@ -69,9 +67,9 @@ regressor = Sequential()
 
 #adding layer(s) to model
 regressor.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], x_train.shape[2])))
-regressor.add(Dropout(0.5))
+regressor.add(Dropout(0.3))
 regressor.add(LSTM(units=50, return_sequences=True ))
-regressor.add(Dropout(0.5))
+regressor.add(Dropout(0.3))
 regressor.add(LSTM(units=33, return_sequences=True))
 
 
