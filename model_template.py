@@ -79,7 +79,9 @@ regressor.add(Dense(units=1))
 #compiling the model with  mean_absolute_percentage_error and adam optimizer
 regressor.compile(optimizer='adam', loss='mean_absolute_percentage_error')
 #fitting model with training sets and validation set
-regressor.fit(x_train, y_train, epochs = 30, batch_size=32, validation_data=(x_test, y_test))
+history = regressor.fit(x_train, y_train, epochs = 30, batch_size=32, validation_data=(x_test, y_test))
+bm.save_vall_loss_plot(history, "validation_loss_graph.png")
+
 results = regressor.predict(x_test)
 
 

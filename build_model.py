@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from data_fusion_transformation import divide_hours
+import matplotlib.pyplot as plt
+
 
 def read_data(file_name, parse_dates = ['Date'], index_col = ['Date']):
     """Reads data from file into dataframe with parsing Date column into datetime object
@@ -175,3 +177,16 @@ def mean_absolute_percentage_error(real, est):
         error += temp
 
     return (error * 100) / real.shape[0]
+
+
+def save_val_loss_plot(history, file_name):
+    """it saves the validation loss history
+    graph to file. It takes the returning value of
+    model.fit as a parameter.
+    """
+    plt.plot(history.history['val_loss'])
+    plt.title('Validation Loss for Model')
+    plt.ylabel('Validation Loss')
+    plt.xlabel('Epoch')
+    plt.savefig(file_name)
+    
