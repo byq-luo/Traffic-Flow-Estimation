@@ -55,7 +55,7 @@ indexes = bm.find_indexes_of_month(data, JUN)
 x_test, y_test = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
                                  TIME_FORWARD, SAMPLE_FREQUENCY)
 #one week from test set starting from may 2 (cause may 1 is holiday)
-x_test = x_test[:2016,:,:]
+x_test = x_test[:2016, :, :]
 y_test = y_test[:2016]
 
 #importing keras model and layers to construct LSTM model

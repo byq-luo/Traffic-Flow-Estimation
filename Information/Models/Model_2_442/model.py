@@ -9,7 +9,7 @@ TIME_BACK = 15
 TIME_FORWARD = 15
 SAMPLE_FREQUENCY = 5
 DISTANCE = 7 * 24 * 60
-FILE_NAME = "442_preprocessed.csv"
+FILE_NAME = "preprocessed_442.csv"
 EPOCH = 30
 
 # index values of months (used for given start of sets for test and training)

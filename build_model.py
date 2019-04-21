@@ -1,7 +1,7 @@
 """ This Module is the base module for constructing LSTM Neural Networks
 	It includes neccesarry functions to prepare data for LSTM
 	Created by Tuğberk AYAR & Ferhat ATLİNAR for 
-	Traffic Flow Estimation with Deep Learning Project. 25 March 2019 Monday"""
+	Traffic Flow Estimation with Deep Learning Project. 25 March 2019 Monday """
 
 
 #Imported libraries for preparing data
@@ -136,7 +136,7 @@ def build_sets(df, indexes, distance, time_back, time_forward, sample_frequency)
     Let's assume; 
     The data is taken each 5 minutes. So, sample_frequency should be 5.
     The time difference between x and y is one week. distance = 7 * 24 * 60.
-    It isn decided to go 15 minutes back and forward for x. So, time_back = time_forward = 15
+    It is decided to go 15 minutes back and forward for x. So, time_back = time_forward = 15
     """
     x = []
     y = []
