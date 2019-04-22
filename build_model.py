@@ -1,7 +1,7 @@
 """ This Module is the base module for constructing LSTM Neural Networks
 	It includes neccesarry functions to prepare data for LSTM
 	Created by Tuğberk AYAR & Ferhat ATLİNAR for 
-	Traffic Flow Estimation with Deep Learning Project. 25 March 2019 Monday """
+	Traffic Flow Estimation with Deep Learning Project. 25 March 2019 Monday"""
 
 
 #Imported libraries for preparing data
@@ -22,15 +22,37 @@ def read_data(file_name, parse_dates = ['Date'], index_col = ['Date']):
     """
     return pd.read_csv(file_name, parse_dates = parse_dates, index_col = index_col)
 
-def scale_data(df):
-	""" Normalizes data in order to scale it between 0 and 1
-	
-	:param df: DataFrame which includes data to be scaled
-    :return: scaled data and MinMaxScaler object
-	"""
-	sc = MinMaxScaler(feature_range = (0, 1))
-	scaled_data = sc.fit_transform(df)
-	return scaled_data, sc
+def merge_two_sensor_data(df1, df2):
+    """it merges two sensor data.
+    """
+    return pd.merge(df1, df2, left_index = True, right_index = True)
+
+def scale_data(df, sc = None):
+    """it scales the given data between 0 and 1.
+    """
+    if sc == None:
+        sc = MinMaxScaler(feature_range = (0, 1))
+    scaled_data =sc.fit_transform(df)
+    return scaled_data, sc
+
+def series_to_supervised(data, time_interval, time_difference,sample_frequency, drop_nan = True):
+	n_vars = len(data.columns)
+	df = pd.DataFrame(data, index = data.index)
+	cols, names = list(), list()
+	first_index_shift = int((time_interval + time_difference) / sample_frequency)
+	last_time_shift = int(time_difference / sample_frequency)
+	for i in range(first_index_shift, last_time_shift - 1, -1):
+		cols.append(df.shift(i))
+		names += [('var%d(t-%d)' % (j+1, i)) for j in range(n_vars)]
+	cols.append(df)
+	names += [('var%d(t)' % (j+1)) for j in range(n_vars)]
+	agg = pd.concat(cols, axis=1)
+	agg.columns = names
+	if drop_nan:
+		agg.dropna(inplace=True)
+	return agg
+
+
 
 def inverse_scale(sc, arr):
     """ Inverses scaled data
@@ -136,7 +158,7 @@ def build_sets(df, indexes, distance, time_back, time_forward, sample_frequency)
     Let's assume; 
     The data is taken each 5 minutes. So, sample_frequency should be 5.
     The time difference between x and y is one week. distance = 7 * 24 * 60.
-    It is decided to go 15 minutes back and forward for x. So, time_back = time_forward = 15
+    It isn decided to go 15 minutes back and forward for x. So, time_back = time_forward = 15
     """
     x = []
     y = []
