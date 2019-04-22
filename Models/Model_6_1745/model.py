@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 
-MODEL_ID = 1
+MODEL_ID = 6
 TIME_INTERVAL = 180
 TIME_DIFFERENCE = 7 * 24 * 60
 SAMPLE_FREQUENCY = 5
@@ -48,8 +48,8 @@ data = bm.merge_two_sensor_data(data_prev, data)
 data.replace(0, np.nan, inplace = True)
 
 #add one hots to data
-#data = bm.join_weekday_one_hot(data)
-#data = bm.join_daypart_one_hot(data)
+data = bm.join_weekday_one_hot(data)
+data = bm.join_daypart_one_hot(data)
 
 #Prepare the sets
 features = len(data.columns)

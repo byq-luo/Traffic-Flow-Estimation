@@ -120,9 +120,9 @@ np.savetxt('rush_hours_errors_#'+str(MODEL_ID)+' .csv', rush_hour_errors, delimi
 print(np.mean(rush_hour_errors))
 
 #saving estimated values for test data
-data =  data[data.index.month == MAY]
-data1 =  pd.DataFrame(index = data.index[2016:4032], data = sc.inverse_transform(y_test.reshape(-1,1)), columns = ['actual speed'])
-preds = pd.DataFrame(data = sc.inverse_transform(results), columns = ['predicted speed'], index = data.index[2016:4032])
+data =  data[data.index.month == JUN]
+data1 =  pd.DataFrame(index = data.index[:2016], data = sc.inverse_transform(y_test.reshape(-1,1)), columns = ['actual speed'])
+preds = pd.DataFrame(data = sc.inverse_transform(results), columns = ['predicted speed'], index = data.index[:2016])
 dt = pd.concat([data1, preds], axis = 1)
 dt.to_csv("Model_#"+str(MODEL_ID)+"_Estimations.csv")
 
