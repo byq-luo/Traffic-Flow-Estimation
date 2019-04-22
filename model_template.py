@@ -5,10 +5,12 @@ import numpy as np
 
 
 MODEL_ID = 1
-TIME_BACK = 15
-TIME_FORWARD = 15
+TIME_INTERVAL = 30
+TIME_DIFFERENCE = 7 * 24 * 60
 SAMPLE_FREQUENCY = 5
-DISTANCE = 7 * 24 * 60
+TIME_STEP = int(TIME_INTERVAL / SAMPLE_FREQUENCY) + 1
+
+
 FILE_NAME = "preprocessed_471.csv"
 
 # index values of months (used for given start of sets for test and training)
@@ -29,33 +31,42 @@ DEC = 12
 data = bm.read_data(FILE_NAME)
 data['Scaled'], sc = bm.scale_data(data)
 
-#CODE FOR CHECKING THE MISSING DATA
-'''
-data = data[data.index.month == MARCH_INDEX]
-data = data[data['Speed'] == -1]
-print(data.groupby([data.index.day]).count())
-'''
+#Nerging another sensor data to main one
+#data_2 = bm.read_csv("preprocessed_470.csv")
+#data_2, sc = bm.scale_data(data_2, sc)
+#data_2.drop(['Speed'], axis = 'column', inplace = True)
+#data = bm.merge_two_sensor_data(data, data_2)
+
+#drop the speed column which includes real speed values (scaled values will be used instead)
+data.drop(['Speed'], axis='columns', inplace=True)
+
+#channge missing values 0 to NaN
+data.replace(0, np.nan, inplace = True)
 
 #add one hots to data
 data = bm.join_weekday_one_hot(data)
 data = bm.join_daypart_one_hot(data)
 
-#drop the speed column which includes real speed values (scaled values will be used instead)
-data.drop(['Speed'], axis='columns', inplace=True)
+#Prepare the sets
+features = len(data.columns)
+x_features = features * TIME_STEP
 
-#build trainig and test sets
-indexes = bm.find_indexes_of_month(data, APR)
-#indexes.extend(bm.find_indexes_of_month(data, MAY))
-x_train, y_train = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
-                                 TIME_FORWARD, SAMPLE_FREQUENCY)
+reframed = bm.series_to_supervised(data, TIME_INTERVAL, TIME_DIFFERENCE, SAMPLE_FREQUENCY)
 
-indexes = bm.find_indexes_of_month(data, MAY)
-x_test, y_test = bm.build_sets(data, indexes, DISTANCE, TIME_BACK,
-                                 TIME_FORWARD, SAMPLE_FREQUENCY)
+train = reframed[(reframed.index.month > FEB) & (reframed.index.month < JUN)]
+test = reframed[(reframed.index.month == JUN) & (reframed.index.day < 8)]
 
-#one week from test set starting from may 2 (cause may 1 is holiday)
-x_test = x_test[2016:4032,:,:]
-y_test = y_test[2016:4032]
+print(train.values[:,-1])
+
+x_train, y_train = train.values[:,:x_features],train.values[:,-1]
+x_test, y_test = test.values[:,:x_features],test.values[:,-1]
+
+
+
+#reshape the x's to 3D[sample, time_steps, features]
+x_train = x_train.reshape([x_train.shape[0], int(x_train.shape[1] / features),features])
+x_test = x_test.reshape([x_test.shape[0], int(x_test.shape[1] / features),features])
+#print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 
 
 #importing keras model and layers to construct LSTM model
