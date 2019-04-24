@@ -4,14 +4,13 @@ import pandas as pd
 import numpy as np
 
 
-MODEL_ID = 1
-TIME_INTERVAL = 30
-TIME_DIFFERENCE = 7 * 24 * 60
+TIME_INTERVAL = 60
+TIME_DIFFERENCE = 7 * 24 * 60 - 60
 SAMPLE_FREQUENCY = 5
 TIME_STEP = int(TIME_INTERVAL / SAMPLE_FREQUENCY) + 1
+EPOCH = 100
 
-
-FILE_NAME = "preprocessed_471.csv"
+FILE_NAME = "preprocessed_1745.csv"
 
 # index values of months (used for given start of sets for test and training)
 JAN = 1
@@ -40,6 +39,12 @@ data['Scaled'], sc = bm.scale_data(data)
 #drop the speed column which includes real speed values (scaled values will be used instead)
 data.drop(['Speed'], axis='columns', inplace=True)
 
+#adding more prev data
+data_prev = data.shift(7*24*12)
+data_prev_2 = data.shift(2*7*24*12)
+data_prev = bm.merge_twodata(data_prev_2, data_prev)
+data = bm.merge_twodata(data_prev, data)
+
 #channge missing values 0 to NaN
 data.replace(0, np.nan, inplace = True)
 
@@ -53,20 +58,18 @@ x_features = features * TIME_STEP
 
 reframed = bm.series_to_supervised(data, TIME_INTERVAL, TIME_DIFFERENCE, SAMPLE_FREQUENCY)
 
-train = reframed[(reframed.index.month > FEB) & (reframed.index.month < JUN)]
-test = reframed[(reframed.index.month == JUN) & (reframed.index.day < 8)]
-
-print(train.values[:,-1])
+train = reframed[(reframed.index.month <  MAY) | (reframed.index.month > SEP)]
+test = reframed[reframed.index.month == MAY]
 
 x_train, y_train = train.values[:,:x_features],train.values[:,-1]
 x_test, y_test = test.values[:,:x_features],test.values[:,-1]
-
-
 
 #reshape the x's to 3D[sample, time_steps, features]
 x_train = x_train.reshape([x_train.shape[0], int(x_train.shape[1] / features),features])
 x_test = x_test.reshape([x_test.shape[0], int(x_test.shape[1] / features),features])
 #print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
+
+
 
 
 #importing keras model and layers to construct LSTM model
@@ -90,39 +93,55 @@ regressor.add(Dense(units=1))
 #compiling the model with  mean_absolute_percentage_error and adam optimizer
 regressor.compile(optimizer='adam', loss='mean_absolute_percentage_error')
 #fitting model with training sets and validation set
-history = regressor.fit(x_train, y_train, epochs = 30, batch_size=32, validation_data=(x_test, y_test))
-bm.save_vall_loss_plot(history, "validation_loss_graph.png")
+history = regressor.fit(x_train, y_train, epochs = EPOCH, batch_size=32, validation_data=(x_test, y_test))
+bm.save_val_loss_plot(history, "loss_graph.png")
 
 results = regressor.predict(x_test)
 
+#constructing estimation dataframe
+real_values = pd.DataFrame(index = test.index, 
+                           data = bm.inverse_scale(sc, y_test.reshape(-1, 1)),
+                           columns = ['Real'])
 
-#extracting daily errors
+predictions = pd.DataFrame(index = test.index,
+                           data = bm.inverse_scale(sc, results),
+                           columns = ['Predictions'])
+
+predictions = pd.concat([real_values, predictions], axis = 1)
+
+
+#constructing daily error dataframe
+days = predictions.groupby([predictions.index.year, 
+                            predictions.index.month, 
+                            predictions.index.day]).count().index.values
+
+
+rush_hour_predictions = predictions[(predictions.index.hour > 15) & (predictions.index.hour < 22)]
 daily_error = []
-for i in range(0, results.shape[0], 288):
-    error = bm.mean_absolute_percentage_error(y_test[i:i + 288], results[i:i + 288])
-    daily_error.append(error)
+rush_hour_error = []
 
-#extracting errors in rush hours
-unscaled = bm.inverse_scale(sc, results)
+for day in days:
+    day_real = predictions[predictions.index.day == day[2]]['Real'].values
+    day_pred = predictions[predictions.index.day == day[2]]['Predictions'].values
+    daily_error.append(bm.mean_absolute_percentage_error(day_real, day_pred))
 
-rush_hour_errors = []
-for i in range(0, results.shape[0], 288):
-    rush_y = y_test[i + 16 * 12:i + 21 * 12]
-    rush_est = results[i + 16 * 12:i + 21 * 12]
-    error = bm.mean_absolute_percentage_error(rush_y, rush_est)
-    rush_hour_errors.append(error)
+    rush_real = rush_hour_predictions[rush_hour_predictions.index.day == day[2]]['Real'].values
+    rush_pred = rush_hour_predictions[rush_hour_predictions.index.day == day[2]]['Predictions'].values
+    rush_hour_error.append(bm.mean_absolute_percentage_error(rush_real, rush_pred))
 
 
+from datetime import date
+daily_error = np.array(daily_error).transpose()
+rush_hour_errors = np.array(rush_hour_error).transpose()
+print(daily_error.shape)
+indexes = [date(day[0], day[1], day[2]).ctime() for day in days]
+data = {'Daily Error': daily_error, 
+        'Rush Hour Error': rush_hour_error}
 
-#saving daily errors and errors in rush hours
-np.savetxt('daily_error_#'+str(MODEL_ID)+' .csv', daily_error, delimiter = ",", fmt = '%s')
-np.savetxt('rush_hours_errors_#'+str(MODEL_ID)+' .csv', rush_hour_errors, delimiter = ",", fmt = '%s')
-print(np.mean(rush_hour_errors))
+errors = pd.DataFrame(index = indexes, data = data)
+errors.index.name =  'Date'
 
-#saving estimated values for test data
-data =  data[data.index.month == JUN]
-data1 =  pd.DataFrame(index = data.index[:2016], data = sc.inverse_transform(y_test.reshape(-1,1)), columns = ['actual speed'])
-preds = pd.DataFrame(data = sc.inverse_transform(results), columns = ['predicted speed'], index = data.index[:2016])
-dt = pd.concat([data1, preds], axis = 1)
-dt.to_csv("Model_#"+str(MODEL_ID)+"_Estimations.csv")
-
+#saving everything
+regressor.save_weights("weights.h5")
+errors.to_csv("Daily_Errors.csv")
+predictions.to_csv("Estimations.csv")

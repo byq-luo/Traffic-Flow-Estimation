@@ -22,8 +22,8 @@ def read_data(file_name, parse_dates = ['Date'], index_col = ['Date']):
     """
     return pd.read_csv(file_name, parse_dates = parse_dates, index_col = index_col)
 
-def merge_two_sensor_data(df1, df2):
-    """it merges two sensor data.
+def merge_twodata(df1, df2):
+    """it merges two given dataframe with respect to their indexes.
     """
     return pd.merge(df1, df2, left_index = True, right_index = True)
 
@@ -36,6 +36,21 @@ def scale_data(df, sc = None):
     return scaled_data, sc
 
 def series_to_supervised(data, time_interval, time_difference,sample_frequency, drop_nan = True):
+    """it converts a time series dataframe to sequential model.
+
+    :param data:                a dataframe object that holds the sequential information
+    :param time_interval:       desired time stamp in dataset. it should be given in minutes.
+    :param time_difference:     time difference between last sample of x data and y. it should be
+                                given in minutes.
+    :param sample_frequency:    time difference between two subsequential entry in raw data. it should
+                                given in minutes.
+    :param drop_nan:            boolean value. About whether the final df consists NaN values or not.
+    
+    :return:                    it reutrns a dataframe that consist sequences about all the features given in data.
+                                if there are A value given with the data, and if time_interval/sample_frequency = B,
+                                there will be A*B + 1 output columns on the returning dataframe.
+
+    """
 	n_vars = len(data.columns)
 	df = pd.DataFrame(data, index = data.index)
 	cols, names = list(), list()
@@ -131,48 +146,6 @@ def get_month(date):
     """
     return date.month
 
-def find_indexes_of_month(df, month):
-    """ Gets indexes of given month from given dataframe
-
-    :param df: dataframe that month indexes will be exctract from
-    :param month: month that indexes of it will be extracted from dataframe
-    :return: indexes of given month
-    """
-    df.reset_index(inplace = True)
-    indexes = df.index[df['Date'].apply(get_month) == month].tolist()
-    df.set_index(['Date'], drop = True, inplace = True)
-    return indexes
-
-def build_sets(df, indexes, distance, time_back, time_forward, sample_frequency):
-    """ Builds sets for LSTM model as either training or test based on given purpose
-
-    :param df: dataframe to be used to exctract sets out of it
-    :param indexes: indexes that specifies interval of aimed data 
-    :param distance: difference between x and y in minutes
-    :param time_back: how many minutes will window go back from that difference
-    :param time_forward: how many minutes will window go forward from that difference
-    :param sample_freuqency: the time difference between two entries in given df.
-    :return: np array of x and y sets
-
-    Demonstration:
-    Let's assume; 
-    The data is taken each 5 minutes. So, sample_frequency should be 5.
-    The time difference between x and y is one week. distance = 7 * 24 * 60.
-    It isn decided to go 15 minutes back and forward for x. So, time_back = time_forward = 15
-    """
-    x = []
-    y = []
-    index_difference = int(distance / sample_frequency)
-    index_back = int(time_back / sample_frequency)
-    index_forward = int(time_forward / sample_frequency) + 1
-    arr = df.values
-    for i in indexes:
-        if (0 not in arr[i - index_difference - time_back:i - index_difference + time_forward,-1] and
-                arr[i, -1] != 0): #exclude missing values. They are equal to 0 after scaling
-            x.append(arr[i - index_difference - index_back:i - index_difference + index_forward,:])
-            y.append(arr[i, -1])
-    return np.array(x), np.array(y)
-
 def average_estimation(x, y):
     """ Calculates average MAPE from given sets
 
@@ -202,15 +175,16 @@ def mean_absolute_percentage_error(real, est):
 
     return (error * 100) / real.shape[0]
 
-
 def save_val_loss_plot(history, file_name):
     """it saves the validation loss history
     graph to file. It takes the returning value of
     model.fit as a parameter.
     """
-    plt.plot(history.history['val_loss'])
-    plt.title('Validation Loss for Model')
-    plt.ylabel('Validation Loss')
+    plt.plot(history.history['val_loss'], label = 'Validation Loss')
+    plt.plot(history.history['loss'], label = 'Train Loss')
+    plt.title('Loss values for the Model')
+    plt.ylabel('MAPE')
     plt.xlabel('Epoch')
+    plt.legend()
     plt.savefig(file_name)
     
