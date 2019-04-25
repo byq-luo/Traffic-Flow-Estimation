@@ -22,7 +22,7 @@ def read_data(file_name, parse_dates = ['Date'], index_col = ['Date']):
     """
     return pd.read_csv(file_name, parse_dates = parse_dates, index_col = index_col)
 
-def merge_twodata(df1, df2):
+def merge_two_data(df1, df2):
     """it merges two given dataframe with respect to their indexes.
     """
     return pd.merge(df1, df2, left_index = True, right_index = True)
@@ -49,23 +49,22 @@ def series_to_supervised(data, time_interval, time_difference,sample_frequency, 
     :return:                    it reutrns a dataframe that consist sequences about all the features given in data.
                                 if there are A value given with the data, and if time_interval/sample_frequency = B,
                                 there will be A*B + 1 output columns on the returning dataframe.
-
     """
-	n_vars = len(data.columns)
-	df = pd.DataFrame(data, index = data.index)
-	cols, names = list(), list()
-	first_index_shift = int((time_interval + time_difference) / sample_frequency)
-	last_time_shift = int(time_difference / sample_frequency)
-	for i in range(first_index_shift, last_time_shift - 1, -1):
-		cols.append(df.shift(i))
-		names += [('var%d(t-%d)' % (j+1, i)) for j in range(n_vars)]
-	cols.append(df)
-	names += [('var%d(t)' % (j+1)) for j in range(n_vars)]
-	agg = pd.concat(cols, axis=1)
-	agg.columns = names
-	if drop_nan:
-		agg.dropna(inplace=True)
-	return agg
+    n_vars = len(data.columns)
+    df = pd.DataFrame(data, index = data.index)
+    cols, names = list(), list()
+    first_index_shift = int((time_interval + time_difference) / sample_frequency)
+    last_time_shift = int(time_difference / sample_frequency)
+    for i in range(first_index_shift, last_time_shift - 1, -1):
+        cols.append(df.shift(i))
+        names += [('var%d(t-%d)' % (j+1, i)) for j in range(n_vars)]
+    cols.append(df)
+    names += [('var%d(t)' % (j+1)) for j in range(n_vars)]
+    agg = pd.concat(cols, axis=1)
+    agg.columns = names
+    if drop_nan:
+        agg.dropna(inplace=True)
+    return agg
 
 
 

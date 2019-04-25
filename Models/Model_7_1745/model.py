@@ -67,10 +67,6 @@ x_test, y_test = test.values[:,:x_features],test.values[:,-1]
 #reshape the x's to 3D[sample, time_steps, features]
 x_train = x_train.reshape([x_train.shape[0], int(x_train.shape[1] / features),features])
 x_test = x_test.reshape([x_test.shape[0], int(x_test.shape[1] / features),features])
-#print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
-
-
-
 
 #importing keras model and layers to construct LSTM model
 from keras.models import Sequential
@@ -133,7 +129,6 @@ for day in days:
 from datetime import date
 daily_error = np.array(daily_error).transpose()
 rush_hour_errors = np.array(rush_hour_error).transpose()
-print(daily_error.shape)
 indexes = [date(day[0], day[1], day[2]).ctime() for day in days]
 data = {'Daily Error': daily_error, 
         'Rush Hour Error': rush_hour_error}
