@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 
-MODEL_ID = 1
+MODEL_ID = 6
 TIME_INTERVAL = 180
 TIME_DIFFERENCE = 7 * 24 * 60
 SAMPLE_FREQUENCY = 5

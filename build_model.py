@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from data_fusion_transformation import divide_hours
+from data_fusion_transformation import  divide_rush_hours
 import matplotlib.pyplot as plt
 
 
@@ -107,6 +108,11 @@ def join_weekday_one_hot(df):
     days = pd.DataFrame(data = df.index.weekday, index = df.index)
     return merge_one_hot_to_data(df, days)
 
+def join_rush_hour(df):
+    hours = pd.DataFrame(data=df.index.map(divide_rush_hours),
+                         index=df.index)
+    return  merge_one_hot_to_data(df, hours)
+
 def join_minute_one_hot(df):
     """ Adds one hot vector of minute to dataframe
 
@@ -186,4 +192,8 @@ def save_val_loss_plot(history, file_name):
     plt.xlabel('Epoch')
     plt.legend()
     plt.savefig(file_name)
-    
+
+def save_est_plot(Estimations, file_name):
+    Estimations.plot(y = ['Real', 'Predictions'])
+    plt.title('Est vs Real')
+    plt.savefig(file_name)

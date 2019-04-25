@@ -46,6 +46,12 @@ def divide_hours(date):
         return 4
     return 5
 
+def divide_rush_hours(date):
+
+    if date.hour >= 16 and date.hour <= 21:
+        return 0
+    else:
+        return 1
 
 def prepare_holidays_2017(date):
     """Distinguishes days that are holidays, or around holidays or far from them. 
