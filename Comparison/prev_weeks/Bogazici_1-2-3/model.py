@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-PLACE = "FSM"
+PLACE = "BOGAZICI"
 TIME_INTERVAL = 90
 TIME_DIFFERENCE = 7 * 24 * 60 - 45
 SAMPLE_FREQUENCY = 5
@@ -12,7 +12,7 @@ TIME_STEP = int(TIME_INTERVAL / SAMPLE_FREQUENCY) + 1
 EPOCH = 50
 BATCH_SIZE = 2018
 
-FILE_NAME = "preprocessed_471.csv"
+FILE_NAME = "preprocessed_442.csv"
 
 # index values of months (used for given start of sets for test and training)
 JAN = 1

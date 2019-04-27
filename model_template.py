@@ -50,7 +50,7 @@ data.drop(['Speed'], axis='columns', inplace=True)
 data.replace(0, np.nan, inplace = True)
 
 #add one hots to data
-#data = bm.join_weekday_one_hot(data)
+data = bm.join_weekday_one_hot(data)
 #data = bm.join_daypart_one_hot(data)
 
 #Prepare the sets
