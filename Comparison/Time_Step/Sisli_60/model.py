@@ -2,16 +2,17 @@
 import build_model as bm
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
-
+PLACE = "Sisli"
 TIME_INTERVAL = 60
 TIME_DIFFERENCE = 7 * 24 * 60 - 30
 SAMPLE_FREQUENCY = 5
 TIME_STEP = int(TIME_INTERVAL / SAMPLE_FREQUENCY) + 1
 EPOCH = 50
-BATCH_SIZE = 2048
+BATCH_SIZE = 2018
 
-FILE_NAME = "preprocessed_471.csv"
+FILE_NAME = "preprocessed_1745.csv"
 
 # index values of months (used for given start of sets for test and training)
 JAN = 1
@@ -29,6 +30,7 @@ DEC = 12
 
 #Read and scale data
 data = bm.read_data(FILE_NAME)
+#data = pd.concat([bm.read_data("preprocessed_471_2016.csv"), data])
 data['Scaled'], sc = bm.scale_data(data)
 
 #drop the speed column which includes real speed values (scaled values will be used instead)
@@ -50,7 +52,7 @@ data.drop(['Speed'], axis='columns', inplace=True)
 data.replace(0, np.nan, inplace = True)
 
 #add one hots to data
-#data = bm.join_weekday_one_hot(data)
+data = bm.join_weekday_one_hot(data)
 #data = bm.join_daypart_one_hot(data)
 
 #Prepare the sets
@@ -59,8 +61,14 @@ x_features = features * TIME_STEP
 
 reframed = bm.series_to_supervised(data, TIME_INTERVAL, TIME_DIFFERENCE, SAMPLE_FREQUENCY)
 
-train = reframed[(reframed.index.month <  JUN) & (reframed.index.month > JUN)]
-test = reframed[(reframed.index.month == JUN) & (reframed.index.day < 10)]
+train = reframed[(reframed.index.month < JUN)&(reframed.index.month>FEB)]
+test = reframed[reframed.index.month == JUN]
+test = test[test.index.day < 10]
+
+#removing weekends from database
+#train = train[train.index.weekday < 5]
+#test = test[test.index.weekday < 5]
+
 
 x_train, y_train = train.values[:,:x_features],train.values[:,-1]
 x_test, y_test = test.values[:,:x_features],test.values[:,-1]
@@ -68,7 +76,6 @@ x_test, y_test = test.values[:,:x_features],test.values[:,-1]
 #reshape the x's to 3D[sample, time_steps, features]
 x_train = x_train.reshape([x_train.shape[0], int(x_train.shape[1] / features),features])
 x_test = x_test.reshape([x_test.shape[0], int(x_test.shape[1] / features),features])
-#print(x_train.shape, y_train.shape, x_test.shape, y_test.shape)
 
 #importing keras model and layers to construct LSTM model
 from keras.models import Sequential
@@ -90,9 +97,10 @@ regressor.add(Dense(units=1))
 
 #compiling the model with  mean_absolute_percentage_error and adam optimizer
 regressor.compile(optimizer='adam', loss='mean_absolute_percentage_error')
+
 #fitting model with training sets and validation set
 history = regressor.fit(x_train, y_train, epochs = EPOCH, batch_size=BATCH_SIZE, validation_data=(x_test, y_test))
-bm.save_val_loss_plot(history, "loss_graph.png")
+bm.save_val_loss_plot(history, PLACE+"_epoch_history.csv")
 
 results = regressor.predict(x_test)
 
@@ -140,6 +148,7 @@ errors = pd.DataFrame(index = indexes, data = data)
 errors.index.name =  'Date'
 
 #saving everything
-regressor.save_weights("weights.h5")
-errors.to_csv("Daily_Errors.csv")
-predictions.to_csv("Estimations.csv")
+regressor.save_weights(PLACE+"_weights.h5")
+errors.to_csv(PLACE+"_Daily_Errors.csv")
+predictions.to_csv(PLACE+"_Estimations.csv")
+print(PLACE)

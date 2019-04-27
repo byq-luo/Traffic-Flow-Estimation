@@ -185,13 +185,13 @@ def save_val_loss_plot(history, file_name):
     graph to file. It takes the returning value of
     model.fit as a parameter.
     """
-    plt.plot(history.history['val_loss'], label = 'Validation Loss')
-    plt.plot(history.history['loss'], label = 'Train Loss')
-    plt.title('Loss values for the Model')
-    plt.ylabel('MAPE')
-    plt.xlabel('Epoch')
-    plt.legend()
-    plt.savefig(file_name)
+    
+    vals = {'Train Loss': history.history['loss'],
+            'Validation Loss': history.history['val_loss']}
+    indexes = [i for i in range(1, 1 + len(history.history['loss']))]
+    df = pd.DataFrame(data = vals, index = indexes)
+    df.to_csv(file_name)
+    
 
 def save_est_plot(Estimations, file_name):
     Estimations.plot(y = ['Real', 'Predictions'])
