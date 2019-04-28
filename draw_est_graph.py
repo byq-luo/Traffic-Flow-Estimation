@@ -33,6 +33,5 @@ plot_data = plot_data[plot_data.index.month == JUN]
 plot_data = plot_data[plot_data.index.day < 10]
 
 plot_data.plot(y = ['Speed', 'Predictions'])
-plot_data.plot(y = ['week_before', 'Predictions'])
 plt.show()
 
