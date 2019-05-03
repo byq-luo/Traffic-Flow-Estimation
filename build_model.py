@@ -10,6 +10,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from data_fusion_transformation import divide_hours
 from data_fusion_transformation import  divide_rush_hours
+from data_fusion_transformation import is_it_school_day_2017
 import matplotlib.pyplot as plt
 
 
@@ -122,6 +123,16 @@ def join_minute_one_hot(df):
     minute = pd.DataFrame(data = df.index.hour * 24 + df.index.minute / 5,
                          index = df.index)
     return merge_one_hot_to_data(df, minute)
+
+def join_school_day(df):
+    days = df.index.tolist()
+    d = []
+    for i in range(len(days)):
+        d.append(is_it_school_day_2017(days[i]))
+
+    days = pd.DataFrame(data= d, index=df.index)
+    return merge_one_hot_to_data(df,days)
+
 
 def join_daypart_one_hot(df):
     """ Adds one hot vector of daypart to dataframe

@@ -16,7 +16,7 @@ def int_to_one_hot(val, max):
 
 
 def is_it_school_day_2017(date):
-    """Returns if the date is school day, 0 otherwise.
+    """Returns if the date is school day (0), 1 otherwise.
     """
     if date.weekday() == 5 or date.weekday() == 6:
         return 0
@@ -28,6 +28,9 @@ def is_it_school_day_2017(date):
         return 0
     if init_date_object("2017-06-10", "%Y-%m-%d") < date < init_date_object("2017-09-17", "%Y-%m-%d"):
         return 0
+    if date.day == 1 and date.month == 1:
+        return 0
+
     return 1
 
    
