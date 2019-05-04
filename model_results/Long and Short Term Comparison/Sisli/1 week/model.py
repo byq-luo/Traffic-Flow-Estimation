@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-PLACE = "Bogazici"
+PLACE = "Sisli"
 TIME_INTERVAL = 90
 TIME_DIFFERENCE = 7 * 24 * 60 - 45
 SAMPLE_FREQUENCY = 5
@@ -52,7 +52,7 @@ data.drop(['Speed'], axis='columns', inplace=True)
 #data = bm.merge_two_data(data_2, data)
 
 #adding more prev data
-#data_prev = data.shift(7*24*12)
+#data_prev = data.shift(7*24*12 - int(TIME_DIFFERENCE / SAMPLE_FREQUENCY))
 #data_prev_2 = data.shift(2*7*24*12)
 #data_prev = bm.merge_two_data(data_prev_2, data_prev)
 #data = bm.merge_two_data(data_prev, data)

@@ -4,15 +4,15 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 
-PLACE = "Atasehir"
+PLACE = "Avcilar"
 TIME_INTERVAL = 90
-TIME_DIFFERENCE = 7 * 24 * 60 - 45
+TIME_DIFFERENCE = 30
 SAMPLE_FREQUENCY = 5
 TIME_STEP = int(TIME_INTERVAL / SAMPLE_FREQUENCY) + 1
 EPOCH = 50
 BATCH_SIZE = 2018
 
-FILE_NAME = "speed_data\\Atasehir\\preprocessed_618_2017.csv"
+FILE_NAME = "speed_data\\Avcilar\\preprocessed_731_2017.csv"
 #SECOND_FILE = "speed_data\\FSM\\preprocessed_470_2017.csv"
 #THIRD_FILE = "speed_data\\FSM\\preprocessed_472_2017.csv"
 
