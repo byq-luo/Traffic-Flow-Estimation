@@ -1,0 +1,220 @@
+#:import Factory kivy.factory.Factory
+
+<HyperScreen>:
+    BoxLayout:
+        BoxLayout:
+            size_hint_x: 0.3
+            orientation: 'vertical'
+            canvas:
+                Color:
+                    rgba:(1, 1, 1, 1)
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            GridLayout:
+                cols:1
+                Spinner:
+                    background_color: (0, 0, 0, 0.3)
+                    color:(0, 0.1, 0.9, 0.9)
+                    option_cls: Factory.get("MenuBackChanger")
+                    text: "Bolge Seciniz"
+                    values: ['fsm','bogazici','kadikoy','bogazici','kadikoya','bogazicia','kadikoyb']
+                    font_name : 'Georgia'
+                Spinner:
+                    color:(0, 0.1, 0.9, 0.9)
+                    background_color: (0, 0, 0, 0.3)
+                    option_cls: Factory.get("MenuBackChanger")
+                    text: 'Sensor Seciniz'
+                    values: ['bogazici']
+                    font_name : 'Georgia'
+            GridLayout:
+                cols: 2
+                Label:
+                    canvas:
+                        Color :
+                            rgba:(0, 0, 0, 0.3)
+                        Rectangle:
+                            size:self.size
+                            pos:self.pos
+                    color : (0, 0.1, 0.9, 0.9)
+                    text: 'Egitim\nBaslangic'
+                    font_name : 'Georgia'
+                Label:
+                    canvas:
+                        Color :
+                            rgba: (0, 0, 0, 0.3)
+                        Rectangle:
+                            size:self.size
+                            pos:self.pos
+                    color : (0, 0.1, 0.9, 0.9)
+                    text: 'Egitim\nBitis'
+                    font_name : 'Georgia'
+                Label:
+                    size_hint_y:None
+                    height:2
+                Label:
+                    size_hint_y:None
+                    height:2
+                DatePicker:
+                    text:"01-01-2017"
+                    id:train_start
+                    background_color:(0, 0, 0, 0.3)
+                    font_name : 'Georgia'
+                    text_size:(10,10)
+                    color:(0, 0.1, 0.9, 0.9)
+                DatePicker:
+                    text:"01-05-2017"
+                    id:train_end
+                    background_color: (0, 0, 0, 0.3)
+                    font_name : 'Georgia'
+                Label:
+                    size_hint_y:None
+                    height:2
+                Label:
+                    size_hint_y:None
+                    height:2
+                Label:
+                    canvas:
+                        Color :
+                            rgba:(0, 0, 0, 0.3)
+                        Rectangle:
+                            size:self.size
+                            pos:self.pos
+                    color : (0, 0.1, 0.9, 0.9)
+                    text: 'Test \nBaslangic'
+                    font_name : 'Georgia'
+                Label:
+                    canvas:
+                        Color :
+                            rgba:(0, 0, 0, 0.3)
+                        Rectangle:
+                            size:self.size
+                            pos:self.pos
+                    color : (0, 0.1, 0.9, 0.9)
+                    text: 'Test \nBitis'
+                    font_name : 'Georgia'
+                Label:
+                    size_hint_y:None
+                    height:2
+                Label:
+                    size_hint_y:None
+                    height:2
+                DatePicker:
+                    text: "01-05-2017"
+                    id:test_start
+                    background_color: (0, 0, 0, 0.3)
+                    color : (0,0,0,1)
+                    font_name : 'Georgia'
+                DatePicker:
+                    text: "01-06-2017"
+                    id:test_end
+                	font_name : 'Georgia'
+                	font_color:(0,0,1,1)
+                    background_color: (0, 0, 0, 0.3)
+                    color : (0,0,0,1)
+            GridLayout:
+                cols:1
+                Label:
+                    size_hint_y :None
+                    height:1
+                Button:
+                    font_name : 'Georgia'
+                    color:(0, 0.1, 0.9, 0.9)
+                    background_color: (0, 0, 0, 0.3)
+                    text: 'Hiper Parametre Ayarla'
+                    on_press: root.settings_button_click()
+                Label:
+                    size_hint_y :None
+                    height:2
+                Button:
+                    color:(0, 0.1, 0.9, 0.9)
+                    background_color: (0, 0, 0, 0.3)
+                    text: 'Egitimi Baslat'
+                    font_name : 'Georgia'
+                    on_press: root.start_train_button()
+                Label:
+                    size_hint_y :None
+                    height:1
+        Label:
+            canvas:
+                Color :
+                    rgba:(1, 1, 1, 1)
+                Rectangle:
+                    size:self.size
+                    pos:self.pos
+            size_hint_x :None
+            width:1    
+
+        MapView:
+            padding:(2,2)
+            zoom:10
+            lat: 41.091602
+            lon: 29.066435
+
+<MenuBackChanger@SpinnerOption>:
+    canvas:
+        Color :
+            rgba:(1, 1, 1, 0.4)
+        Rectangle:
+            size:self.size
+            pos:self.pos
+    color:(0, 0, 1, 1)
+    font_size:'17sp'
+<Options>:
+    
+
+<SettingsPopUp>:
+    id: settings
+    auto_dismiss: False
+    size: (400,400)
+    size_hint:(None,None)
+    title: "Model Hiperparametre Secimi" 
+    GridLayout:
+        cols:2
+        Label:
+        Label:
+        Label:
+            text:'Epok sayisi giriniz:'
+        TextInput:
+            id:epoch
+            text: '50'
+        Label:
+            text: "Zaman araligi giriniz:"
+        TextInput:
+            id: time_step
+            text: '120'
+        Label:
+            text: 'Batch boyutunu giriniz:'
+        TextInput:
+            id:batch
+            text:'2048'
+        Label:
+            text:'Gun bilgisi eklensin mi?'
+        Spinner:
+            id: day
+            text: "Evet"
+            values: ["Evet","Hayir"]
+        Label:
+            text: 'Gun saat dilimi eklensin mi'
+        Spinner:
+            id:daypart
+            text:'Evet'
+            values: ["Evet","Hayir"]
+        Label:
+            text: "Eski haftalar"
+        Spinner:
+            id: prev_week
+            text: "Yalnizca 1 hafta"
+            values: ["Sadece 1 hafta", "1 ve 2 hafta", "1, 2 ve 3 hafta"]
+        Label:
+        Label:
+        Label:
+        Button:
+            text: "Kapat"
+            on_press: root.dismiss()
+
+
+<TrainScreen>:
+    BoxLayout:
+        Label:
+            id:result
