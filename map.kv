@@ -161,8 +161,6 @@
     color:(0, 0, 1, 1)
     font_size:'17sp'
 <Options>:
-    
-
 <SettingsPopUp>:
     id: settings
     auto_dismiss: False
@@ -182,7 +180,7 @@
             text: "Zaman araligi giriniz:"
         TextInput:
             id: time_step
-            text: '120'
+            text: '30'
         Label:
             text: 'Batch boyutunu giriniz:'
         TextInput:
@@ -221,51 +219,69 @@
             id:header
             text:"Ilk epoch sonuclarının akinmasi bekleniyor..."
         BoxLayout:
-            MyFigure:
-                id:figure
+            Image:
+                id:graph
+                source:"epoch_his/default.png"
             Label:
                 id:result
         Button:
             text:"Tum Sonuclari Gor"
             on_press: root.see_all_results_button_click()
             id: results
+            disabled: True
 
 
 <ResultsScreen>:
     column_headings: column_headings
     orientation: "vertical"
-    GridLayout:
-        canvas.before:
-            Color:
-                rgba: (1, 0.2, 0, .5)     # 50% translucent orange red
-            Rectangle:
-                pos: self.pos
-                size: self.size
-
-        id: column_headings
-        size_hint: 1, None
-        size_hint_y: None
-        height: 25
-        cols: 3
-
     BoxLayout:
-        canvas.before:
-            Color:
-                rgba: (.0, 0.9, .1, .3)
-            Rectangle:
-                pos: self.pos
-                size: self.size
+        orientation: 'vertical'
+        GridLayout:
+            canvas.before:
+                Color:
+                    rgba: (1, 0.2, 0, .5)     # 50% translucent orange red
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
-        RecycleView:
-            viewclass: 'Button'
-            background_color:(1,1,1,1)
-            data: root.rv_data
-            RecycleGridLayout:
-                cols: 3
-                default_size: None, dp(26)
-                default_size_hint: 1, None
-                size_hint_y: None
-                height: self.minimum_height
-                multiselect: False
-                touch_multiselect: True
-           
+            id: column_headings
+            size_hint: 1, None
+            size_hint_y: None
+            height: 25
+            cols: 3
+
+        BoxLayout:
+            canvas.before:
+                Color:
+                    rgba: (.0, 0.9, .1, .3)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            RecycleView:
+                viewclass: 'Button'
+                background_color:(1,1,1,1)
+                data: root.rv_data
+                RecycleGridLayout:
+                    cols: 3
+                    default_size: None, dp(26)
+                    default_size_hint: 1, None
+                    size_hint_y: None
+                    height: self.minimum_height
+                    multiselect: False
+                    touch_multiselect: True
+
+        Butoom:
+            text:"Bir Onceki Sayfaya Don"
+
+        Button:
+            text:"Ama Menuye Don"
+            
+
+
+<HomeScreen>:
+    BoxLayout:
+        Label:
+            text: "Baslangic Sayfasi"
+        Button:
+            text: "Basla"
