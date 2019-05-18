@@ -92,7 +92,8 @@ class HyperScreen(Screen):
             )
             self.manager.screens[1].update_results(epoch_history, i+1, epochs)
         self.train_object.save_estimations(file_name)
-    
+        self.manager.screens[2].get_dataframe()
+
 
 
 class SettingsPopUp(Popup):
@@ -126,7 +127,7 @@ class ResultsScreen(Screen):
         super(ResultsScreen, self).__init__(**kwargs)
 
     def get_dataframe(self):
-        df = pandas.read_csv(file_name)
+        df = pd.read_csv(file_name)
 
         for heading in df.columns:
             self.column_headings.add_widget(Label(text=heading))
