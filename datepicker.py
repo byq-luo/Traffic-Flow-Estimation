@@ -447,7 +447,7 @@ def get_quarter(y, m):
 def today_date_list():
     """ Return list with today date """
     
-    return [datetime.now().day, datetime.now().month, datetime.now().year]
+    return [1, 1, 2017 ]
     
 def today_date():
     """ Return today date dd.mm.yyyy like 28.02.2015 """
@@ -461,3 +461,4 @@ if __name__ == "__main__":
     
     c = DatePicker()
     runTouchApp(c)
+

@@ -92,3 +92,19 @@ class TrainAttributes:
         self.x_test = x_test
         self.y_test = y_test
         self.sc = sc
+
+
+    def save_estimations(self, file_name):
+        results = self.regressor.predict(self.x_test)
+
+        real_values = pd.DataFrame(index = test.index, 
+                                data = bm.inverse_scale(sc, y_test.reshape(-1, 1)),
+                                columns = ['Real'])
+
+        predictions = pd.DataFrame(index = test.index,
+                                data = bm.inverse_scale(sc, results),
+                                columns = ['Predictions'])
+
+        predictions = pd.concat([real_values, predictions], axis = 1)
+
+        predictions.to_csv(file__name)
