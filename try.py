@@ -20,9 +20,7 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.garden.mapview import MapView, MapMarker
 
-import train
-from kivy.clock import Clock
-
+from train import Train
 from threading import Thread
 import matplotlib.pyplot as plt
 import numpy as np
@@ -77,7 +75,7 @@ class HyperScreen(Screen):
         test_loss_history = np.empty(shape=(epochs))
         epoch_history = {"train": train_loss_history, "test":test_loss_history}
 
-        self.train_object = train.prepare_model(
+        self.train_object = Train(
         "./speed_data/FSM/preprocessed_471_2017.csv",
         self.weekday, 
         self.ids.train_start.text,
@@ -89,15 +87,9 @@ class HyperScreen(Screen):
         self.daypart
         )       
         for i in range(epochs):
-            history = self.train_object.regressor.fit(
-                self.train_object.x_train,
-                self.train_object.y_train,
-                epochs=1,
-                batch_size=int(self.manager.screens[0].popup.ids.batch.text),
-                validation_data=(self.train_object.x_test, self.train_object.y_test)
+            epoch_history["train"][i], epoch_history["test"][i] = self.train_object.fit(
+                int(self.popup.ids.batch.text)
             )
-            epoch_history["train"][i] = history.history["loss"][0]
-            epoch_history["test"][i] = history.history["val_loss"][0]
             self.manager.screens[1].update_results(epoch_history, i+1, epochs)
         self.train_object.save_estimations(file_name)
     
