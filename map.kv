@@ -213,22 +213,34 @@
 
 
 <TrainScreen>:
-    BoxLayout:
-        orientation:'vertical'
-        Label:
-            id:header
-            text:"Ilk epoch sonuclarının akinmasi bekleniyor..."
+    GridLayout:
+        cols:2
+        Image:
+            id:graph
+            source:"epoch_his/default.png"
         BoxLayout:
-            Image:
-                id:graph
-                source:"epoch_his/default.png"
+            orientation:'vertical'
+            Label:
+                id:header
+                text:"Ilk epok sonuclari bekleniyor"
             Label:
                 id:result
-        Button:
-            text:"Tum Sonuclari Gor"
-            on_press: root.see_all_results_button_click()
-            id: results
-            disabled: True
+            ProgressBar:
+                text: "no title"
+                id: progress
+                max: 100
+            BoxLayout:
+                Button:
+                    id:home
+                    text:"Egitim Seceneklerine Geri Don"
+                    disabled: True
+                    on_press:root.go_back_button()
+                Button:
+                    id:results
+                    text:"Tum Sonuclari Gor"
+                    on_press:root.see_all_results_button_click()
+                    disabled: True
+            
 
 
 <ResultsScreen>:
@@ -271,17 +283,21 @@
                     multiselect: False
                     touch_multiselect: True
 
-        Butoom:
+        Button:
             text:"Bir Onceki Sayfaya Don"
+            on_press: root.go_back_button()
 
         Button:
             text:"Ama Menuye Don"
+            on_press: root.go_home_button()
             
 
 
 <HomeScreen>:
     BoxLayout:
+        orientation: 'vertical'
         Label:
             text: "Baslangic Sayfasi"
         Button:
             text: "Basla"
+            on_press: root.go_to_hyper_screen()
