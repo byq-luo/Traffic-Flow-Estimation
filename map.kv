@@ -216,5 +216,12 @@
 
 <TrainScreen>:
     BoxLayout:
+        orientation:'vertical'
         Label:
-            id:result
+            id:header
+            text:"İlk epoch sonuclarının akinmasi bekleniyor..."
+        BoxLayout:
+            MyFigure:
+                id:figure
+            Label:
+                id:result

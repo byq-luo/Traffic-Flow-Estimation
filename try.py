@@ -12,14 +12,16 @@ from kivy.uix.textinput import TextInput
 from kivy.properties import NumericProperty 
 import concurrent.futures
 
+from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.garden.mapview import MapView, MapMarker
+
 import train
 from kivy.clock import Clock
-import threading
 
 from threading import Thread
-
-
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 
 file_name = "preprocessed_471_2017.csv"
 
@@ -64,6 +66,10 @@ class HyperScreen(Screen):
 
         #t.join()
     def fit(self, epochs):  
+        train_loss_history = np.empty(shape=(epochs))
+        test_loss_history = np.empty(shape=(epochs))
+        epoch_history = {"train": train_loss_history, "test":test_loss_history}
+
         self.train_object = train.prepare_model(
         "./speed_data/FSM/preprocessed_471_2017.csv",
         self.weekday, 
@@ -83,7 +89,9 @@ class HyperScreen(Screen):
                 batch_size=int(self.manager.screens[0].popup.ids.batch.text),
                 validation_data=(self.train_object.x_test, self.train_object.y_test)
             )
-            self.manager.screens[1].ids.result.text = str(history.history["val_loss"])
+            epoch_history["train"][i] = history.history["loss"][0]
+            epoch_history["test"][i] = history.history["val_loss"][0]
+            self.manager.screens[1].update_results(epoch_history, i+1, epochs)
 
     
 
@@ -93,12 +101,24 @@ class SettingsPopUp(Popup):
 
 class TrainScreen(Screen):
 
-    def __init__(self, *args, **kwargs):
-        super(TrainScreen, self).__init__(*args, **kwargs)
-        self.train_object = None
+    def update_results(self, epoch_history, current_epoch, max_epoch):
+        self.ids.header.text = "EPOCH: " + str(current_epoch) + "/" + str(max_epoch)
+        self.ids.figure.figure.clf()
+        indexes = [i for i in range(1, 1 + len(epoch_history["train"]))]
+        plt.plot(indexes, epoch_history["train"], label="Eğitim MAPE")
+        plt.plot(indexes, epoch_history["test"], label="Test MAPE")
+        plt.show()
+        self.ids.figure.figure.canvas.draw_idle()
+        epoch_info_text = self.ids.header.text + "\n"
+        epoch_info_text += "Eğitim MAPE: " + str(epoch_history["train"][current_epoch-1]) + "\n"
+        epoch_info_text += "Test MAPE: " + str(epoch_history["test"][current_epoch-1])
+        self.ids.result.text = epoch_info_text
 
-    def start_train(self):
-        pass
+
+class MyFigure(FigureCanvasKivyAgg):
+
+    def __init__(self,**kwargs):
+        super(MyFigure, self).__init__(plt.gcf(),**kwargs)
 
 
 MapApp().run()
