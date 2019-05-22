@@ -11,7 +11,6 @@ from datepicker import DatePicker
 from kivy.uix.textinput import TextInput
 from kivy.properties import NumericProperty, ObjectProperty, ListProperty, BooleanProperty
 from kivy.uix.image import Image
-from kivy.core.image import Image as CoreI
 from kivy.uix.progressbar import ProgressBar      
 
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
@@ -36,7 +35,7 @@ from kivy.clock import mainthread
 file_name = "preprocessed_471_2017.csv"
 
 file_name="results.csv"
-
+#
 class MapApp(App):
     
     def build(self):
@@ -85,7 +84,6 @@ class HyperScreen(Screen):
         self.t.setDaemon(True)
         self.t.start()
 
-        #t.join()
     def fit(self, epochs):  
         train_loss_history = []
         test_loss_history = []
@@ -115,8 +113,9 @@ class HyperScreen(Screen):
         self.manager.screens[1].ids.results.disabled = False
         self.manager.screens[1].ids.home.disabled = False
 
-
-
+    def pin_map(self):
+        marker = MapMarker(lon=29.0611, lat=41.0911)
+        self.ids.map.add_marker(marker)
 
 
 class SettingsPopUp(Popup):
@@ -128,10 +127,10 @@ class TrainScreen(Screen):
         self.ids.header.text = "EPOCH: " + str(current_epoch) + "/" + str(max_epoch)
         indexes = [i for i in range(1, 1 + len(epoch_history["train"]))]
         fig = plt.figure()
+        plt.style.use('dark_background')
         ax = fig.add_axes([0.1,0.1,0.8,0.8])
         ax.set_xlim([1,max_epoch])
         ax.set_ylim([0,100])
-        ax.set_xticks(indexes)
         ax.plot(indexes, epoch_history["train"], label="Eğitim MAPE")
         ax.plot(indexes, epoch_history["test"], label="Test MAPE")
         self.fig_path = "epoch_his/fig_" + str(current_epoch) + ".png" 
@@ -177,7 +176,6 @@ class ResultsScreen(Screen):
     def get_dataframe(self):
         df = pd.read_csv(file_name)
 
-      
 
         data = []
         for row in df.itertuples():

@@ -2,6 +2,12 @@
 
 <HyperScreen>:
     BoxLayout:
+        MapView:
+            id: map
+            padding:(2,2)
+            zoom:10
+            lat: 41.091602
+            lon: 29.066435
         BoxLayout:
             size_hint_x: 0.3
             orientation: 'vertical'
@@ -18,15 +24,16 @@
                     color:(0, 0.1, 0.9, 0.9)
                     option_cls: Factory.get("MenuBackChanger")
                     text: "Bolge Seciniz"
-                    values: ['fsm','bogazici','kadikoy','bogazici','kadikoya','bogazicia','kadikoyb']
+                    values: ['Hisarustu','bogazici','kadikoy','bogazici','kadikoya','bogazicia','kadikoyb']
                     font_name : 'Georgia'
                 Spinner:
                     color:(0, 0.1, 0.9, 0.9)
                     background_color: (0, 0, 0, 0.3)
                     option_cls: Factory.get("MenuBackChanger")
                     text: 'Sensor Seciniz'
-                    values: ['bogazici']
+                    values: ['fsm koprusu']
                     font_name : 'Georgia'
+                    on_text:root.pin_map()
             GridLayout:
                 cols: 2
                 Label:
@@ -145,11 +152,6 @@
             size_hint_x :None
             width:1    
 
-        MapView:
-            padding:(2,2)
-            zoom:10
-            lat: 41.091602
-            lon: 29.066435
 
 <MenuBackChanger@SpinnerOption>:
     canvas:
@@ -213,35 +215,57 @@
 
 
 <TrainScreen>:
-    GridLayout:
-        cols:2
-        Image:
-            id:graph
-            source:"epoch_his/default.png"
+    canvas:
+        Color :
+            rgba:(0, 0, 0, 1)
+        Rectangle:
+            size:self.size
+            pos:self.pos
+    BoxLayout:
         BoxLayout:
+            Image:
+                allow_stretch:True
+                id:graph
+                source:"default.png"
+        BoxLayout:
+            size_hint_x : 0.45
             orientation:'vertical'
-            Label:
-                id:header
-                text:"Ilk epok sonuclari bekleniyor"
-            Label:
-                id:result
-            ProgressBar:
-                text: "no title"
-                id: progress
-                max: 100
             BoxLayout:
+                orientation:'vertical'
+                Label:
+                Label:
+                Label:
+                    color:(1,1,1,1)
+                    id:header
+                    text:"Ilk Epok\nSonuclari Bekkleniyor"
+                Label:
+                    color:(1,1,1,1)
+                    id:result
+                Label:
+                Label: 
+                Label:
+                Label: 
+                Label:
+                    color:(1,1,1,1)
+                    text:'Progress Bar'
+                ProgressBar:
+                    text: "no title"
+                    id: progress
+                    max: 100
+            BoxLayout:
+                size_hint_y:0.1
                 Button:
                     id:home
-                    text:"Egitim Seceneklerine Geri Don"
+                    text:"Onceki\nSayfaya\nDon"
                     disabled: True
                     on_press:root.go_back_button()
+                    fontsize:'12sp'
                 Button:
                     id:results
-                    text:"Tum Sonuclari Gor"
+                    text:"Tum\nSonuclari\nGor"
                     on_press:root.see_all_results_button_click()
+                    fontsize:'12sp'
                     disabled: True
-            
-
 
 <ResultsScreen>:
     column_headings: column_headings
@@ -283,21 +307,29 @@
                     multiselect: False
                     touch_multiselect: True
 
+    BoxLayout:
         Button:
+            size_hint_y:0.07
             text:"Bir Onceki Sayfaya Don"
             on_press: root.go_back_button()
 
         Button:
+            size_hint_y:0.07
             text:"Ama Menuye Don"
-            on_press: root.go_home_button()
-            
+            on_press: root.go_home_button()                        
 
 
 <HomeScreen>:
-    BoxLayout:
-        orientation: 'vertical'
-        Label:
-            text: "Baslangic Sayfasi"
-        Button:
+    canvas.before:
+        Rectangle:
+            pos:self.pos
+            size:self.size
+            source:'fsm.png'
+    RelativeLayout:
+        Button:          
+            background_color:(0,1,1,0.2)
+            fontsize:'20sp'
+            right: self.parent.right
+            size_hint: None, None
             text: "Basla"
             on_press: root.go_to_hyper_screen()
