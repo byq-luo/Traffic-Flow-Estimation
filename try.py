@@ -9,7 +9,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.popup import Popup
 from datepicker import DatePicker
 from kivy.uix.textinput import TextInput
-from kivy.properties import NumericProperty, ObjectProperty, ListProperty, BooleanProperty
+from kivy.properties import NumericProperty, ObjectProperty, StringProperty, ListProperty, BooleanProperty
 from kivy.uix.image import Image
 from kivy.uix.progressbar import ProgressBar      
 
@@ -23,7 +23,7 @@ from kivy.garden.mapview import MapView, MapMarker
 
 from kivy.clock import Clock
 
-from train import Train
+from train import Train, RegionSelector
 from threading import Thread
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,7 +35,8 @@ from kivy.clock import mainthread
 file_name = "preprocessed_471_2017.csv"
 
 file_name="results.csv"
-#
+
+
 class MapApp(App):
     
     def build(self):
@@ -63,8 +64,10 @@ class HyperScreen(Screen):
 
     def __init__(self, *args, **kwargs):
         super(HyperScreen, self).__init__(*args, **kwargs)
+        self.regions = RegionSelector()
         self.popup = SettingsPopUp()
-
+        self.markers = {}
+        self.ids.region.values = self.regions.get_provinces()
     def settings_button_click(self):
         self.popup.open()
 
@@ -80,17 +83,19 @@ class HyperScreen(Screen):
         if self.popup.ids.daypart.text == "Hayir":
             self.daypart = False
 
-        self.t = Thread(target=self.fit, args=(int(self.popup.ids.epoch.text),))
-        self.t.setDaemon(True)
-        self.t.start()
+        self.train_thread = Thread(target=self.fit, args=(int(self.popup.ids.epoch.text),))
+        self.train_thread.setDaemon(True)
+        self.train_thread.start()
 
     def fit(self, epochs):  
         train_loss_history = []
         test_loss_history = []
         epoch_history = {"train": train_loss_history, "test":test_loss_history}
+        id = self.regions.find_id_from_address(self.ids.sensor.text)
+        source_name = RegionSelector.build_file_name(self.ids.region.text, id)
 
         self.train_object = Train(
-        "./speed_data/FSM/preprocessed_471_2017.csv",
+        source_name,
         self.weekday, 
         self.ids.train_start.text,
         self.ids.train_end.text,
@@ -112,30 +117,38 @@ class HyperScreen(Screen):
         self.manager.screens[2].get_dataframe()
         self.manager.screens[1].ids.results.disabled = False
         self.manager.screens[1].ids.home.disabled = False
-
+        self.build_result_title()
+    
     def pin_map(self):
-        marker = MapMarker(lon=29.0611, lat=41.0911)
-        self.ids.map.add_marker(marker)
+        self.ids.sensor.text = "Sensor Seciniz"
+        if len(self.markers) > 0:
+            for marker in self.markers.values():
+                self.ids.map.remove_marker(marker)
+            self.markers = {}
 
+        sensors = self.regions.get_sensors(self.ids.region.text)
+        for index, row in sensors.iterrows():
+            print(row.ID)
+            file = RegionSelector.build_file_name(self.ids.region.text, row.ID)
+            exists = RegionSelector.check_data_exist(file)
+            marker = MyMarker(self, row.percentage, exists, row.address, lon=row.long, lat=row.lat)
+            self.markers[row.ID] = marker
+            self.ids.map.add_marker(marker)
+            self.ids.sensor.values.append(row.address)
+ 
 
+    def build_result_title(self):
+        title = self.ids.sensor.text + "/" + self.ids.region.text
+        self.manager.screens[2].ids.header.text = title
+   
 class SettingsPopUp(Popup):
     pass
 
 class TrainScreen(Screen):
 
-    def update_results(self, epoch_history, current_epoch, max_epoch):
-        self.ids.header.text = "EPOCH: " + str(current_epoch) + "/" + str(max_epoch)
-        indexes = [i for i in range(1, 1 + len(epoch_history["train"]))]
-        fig = plt.figure()
-        plt.style.use('dark_background')
-        ax = fig.add_axes([0.1,0.1,0.8,0.8])
-        ax.set_xlim([1,max_epoch])
-        ax.set_ylim([0,100])
-        ax.plot(indexes, epoch_history["train"], label="Eğitim MAPE")
-        ax.plot(indexes, epoch_history["test"], label="Test MAPE")
-        self.fig_path = "epoch_his/fig_" + str(current_epoch) + ".png" 
-        fig.savefig(self.fig_path)    
-        ax.cla()
+    def update_results(self, epoch_history, current_epoch, max_epoch):     
+        self.ids.header.text = "EPOK: " + str(current_epoch) + "/" + str(max_epoch)
+        self.save_epoch_history_figure(epoch_history, current_epoch, max_epoch)
         self.update_image()
         epoch_info_text = self.ids.header.text + "\n"
         epoch_info_text += "Eğitim MAPE: " + str(epoch_history["train"][current_epoch-1]) + "\n"
@@ -155,28 +168,44 @@ class TrainScreen(Screen):
         self.manager.screens[1].ids.home.disabled = True
         self.manager.current = "hyper"
 
+    def save_epoch_history_figure(self, epoch_history, current_epoch, max_epoch):
+        indexes = [i for i in range(1, 1 + len(epoch_history["train"]))]
+        fig = plt.figure()
+        plt.style.use('dark_background')
+        ax = fig.add_axes([0.1,0.1,0.8,0.8])
+        ax.set_xlim([1,max_epoch])
+        ax.set_ylim([0,100])
+        plt.title(label="Epok Gecmisi")
+        ax.plot(indexes, epoch_history["train"], label="Eğitim MAPE")
+        ax.plot(indexes, epoch_history["test"], label="Test MAPE")
+        ax.legend()
+        self.fig_path = "epoch_his/fig_" + str(current_epoch) + ".png" 
+        fig.savefig(self.fig_path)    
+        ax.cla()
+
     @mainthread
     def reset_screen(self):
-        self.ids.graph.source = "epoch_his/default.png"
+        self.fig_path = "epoch_his/default.png"
+        self.update_image()
         self.ids.header.text = "Ilk epok sonuclari bekleniyor"
         self.ids.result.text = ""
 
 
 class ResultsScreen(Screen):
+
     frame_list = ObjectProperty()
     column_headings =ObjectProperty()
-    rv_data = ListProperty([])
+    rv_data = ListProperty([])  
     
     def __init__(self, **kwargs):
         super(ResultsScreen, self).__init__(**kwargs)
+
         self.column_headings.add_widget(Label(text="Tarih"))
         self.column_headings.add_widget(Label(text="Gercek Deger"))
         self.column_headings.add_widget(Label(text="Tahmin"))
 
     def get_dataframe(self):
         df = pd.read_csv(file_name)
-
-
         data = []
         for row in df.itertuples():
             for i in range(1, len(row)):
@@ -198,4 +227,24 @@ class HomeScreen(Screen):
     def go_to_hyper_screen(self):
         self.manager.current = self.manager.screens[0].name
 
+
+class MyMarker(MapMarker):
+
+    def __init__(self, screen, percentage,has_data, address,*args, **kwargs):
+        super(MyMarker, self).__init__(*args, **kwargs)
+        self.screen = screen
+        if percentage < 80:
+            self.source = "./marker_ims/red.jpeg"
+        elif has_data:
+            self.source = "./marker_ims/green.jpeg"
+        else:
+            self.source = "./marker_ims/yellow.jpeg"
+        
+        self.address = address
+        
+
+    def update_sensor_spinner_text(self):
+        self.screen.ids.sensor.text = self.address
+
 MapApp().run()
+

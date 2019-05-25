@@ -2,8 +2,11 @@ import build_model as bm
 import pandas as pd
 import numpy as np
 from datetime import datetime
+
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, LSTM, Dropout
+        
+import os
 
 datetime_format = "%d-%m-%Y %H:%M"
 
@@ -23,12 +26,12 @@ class Train:
             sample_frequency=5,
             time_difference=7*24*60):
 
+        
         time_step = int(time_interval / sample_frequency)
 
         data = bm.read_data(file_name)
         data['Scaled'], sc = bm.scale_data(data)
         data.drop(['Speed'], axis='columns', inplace=True)
-
         if prev_weeks != 0:
             data_prev = data.shift(7*24*12)
             if prev_weeks == 2:
@@ -117,4 +120,29 @@ class Train:
             batch_size=batch_size,
             validation_data=(self.x_test, self.y_test)
         )
-        return losses.history["loss"][0], losses.history["val_loss"][0]     
+        return losses.history["loss"][0], losses.history["val_loss"][0] 
+
+
+
+class RegionSelector:
+
+    def __init__(self):
+        self.data = pd.read_csv("sensor_point.csv")
+
+    def get_provinces(self):
+        return np.sort(self.data.region.unique()) 
+
+    def get_sensors(self, province):
+        return self.data[self.data.region == province]
+
+    @staticmethod
+    def build_file_name(province, id):
+        return "./speed_data/" + province + "/preprocessed_" + str(id) + "_2017.csv"
+
+    @staticmethod
+    def check_data_exist(file_name):
+        return os.path.isfile(file_name)
+
+    def find_id_from_address(self, address):
+        data = self.data[self.data.address == address]
+        return data.ID.values[0]

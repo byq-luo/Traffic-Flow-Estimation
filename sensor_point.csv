@@ -1,0 +1,202 @@
+ID,lat,long,percentage,address,region
+1,41.00216,29.02847,3.93,"Dr. Eyup Aksoy Caddesi, Rasimpasa Mahallesi",Kadikoy
+2,40.99275,29.03399,25.35,"Sogutlucesme Parki, Taskopru Caddesi, Rasimpasa Mahallesi",Kadikoy
+3,40.98368,29.03992,92.9,"Mado, Bagdat Caddesi, Zuhtupasa Mahallesi",Kadikoy
+16,40.93563,29.33121,68.18,"O-4, Fatih Mahallesi, Orhanli",Pendik
+17,40.92152,29.32182,67.85,"Teknopark, Sanayi Mahallesi",Pendik
+18,40.91783,29.32197,58.84,"Teknopark, Sanayi Mahallesi",Pendik
+19,40.90207,29.32784,58.1,"E-80 Baglanti Yolu, Sanayi Mahallesi, Orhanli",Tuzla
+20,40.89441,29.32677,3.77,"E-80 Baglanti Yolu, Sanayi Mahallesi, Orhanli",Tuzla
+21,40.8844,29.32081,92.26,"E-80 Baglanti Yolu, Sanayi Mahallesi",Pendik
+22,40.87784,29.31069,80.11,"E-80 Baglanti Yolu, Sanayi Mahallesi",Pendik
+23,40.8772,29.30456,80.17,"E-80 Baglanti Yolu, Camcesme Mahallesi",Pendik
+24,40.87186,29.2876,92.44,"E-80 Baglanti Yolu, Camcesme Mahallesi",Pendik
+25,40.86926,29.27631,86.04,"E-80 Baglanti Yolu, Camcesme Mahallesi",Pendik
+26,40.9008,29.20643,11.9,Cavusoglu Mahallesi,Kartal
+27,40.88916,29.20706,7.99,Yunus Mahallesi,Kartal
+28,40.88565,29.20704,3.25,Yunus Mahallesi,Kartal
+29,40.97779,29.20878,39.09,"D100 - E80 Baglanti Yolu, Ferhatpasa Mahallesi",Maltepe
+30,40.96872,29.2176,86.13,"D100 - E80 Baglanti Yolu, Fatih Mahallesi",Sancaktepe
+31,40.96365,29.21994,86.09,"D100 - E80 Baglanti Yolu, Fatih Mahallesi",Kartal
+32,40.9544,29.22186,64.97,"D100 - E80 Baglanti Yolu, Fatih Mahallesi",Kartal
+33,40.94616,29.21629,56.02,"D100 - E80 Baglanti Yolu, Fatih Mahallesi",Kartal
+34,40.94012,29.21096,56.28,"D100 - E80 Baglanti Yolu, Fatih Mahallesi",Kartal
+35,40.92927,29.20633,56.09,"D100 - E80 Baglanti Yolu, Fatih Mahallesi",Kartal
+36,40.92086,29.21231,56.34,"D100 - E80 Baglanti Yolu, Gumuspinar Mahallesi",Kartal
+37,40.91483,29.2128,92.18,"D100 - E80 Baglanti Yolu, Orta Mahalle",Kartal
+38,40.90831,29.21276,92.1,"D100 - E80 Baglanti Yolu, Orta Mahalle",Kartal
+39,41.01646,29.07557,10.73,"Gurpinar Caddesi, Bulgurlu Mahallesi",Uskudar
+40,41.00578,29.07257,25.82,"Fetih Mahallesi, Ornek",Uskudar
+41,40.99672,29.07394,19.5,"Ornek Mahallesi, Ornek",Uskudar
+42,41.03679,29.04387,61.58,Beylerbeyi Mahallesi,Uskudar
+44,41.03291,29.03994,6.44,Kuzguncuk Mahallesi,Uskudar
+45,41.02413,29.03704,2.3,"Icadiye Baglarbasi Caddesi, Icadiye Mahallesi",Uskudar
+48,41.08276,29.08302,51.12,"Ataturk Caddesi, Goztepe Mahallesi, Goksu",Beykoz
+49,41.08848,29.08924,91.11,"Goztepe Mahallesi, Goksu",Beykoz
+50,41.13683,29.12309,11.45,"Elmali Mahallesi, Beykoz Merkez",Beykoz
+51,41.1279,29.13431,92.56,"Halit Ulukurt Tuneli, Elmali Mahallesi, Pasabahce",Beykoz
+52,41.1212,29.12912,92.57,"Incirkoy Mahallesi, Pasabahce",Beykoz
+53,41.11689,29.12007,26.35,"Acarlar Mahallesi, Pasabahce",Beykoz
+54,41.11047,29.1159,24.47,"Soguksu Mahallesi, Pasabahce",Beykoz
+55,41.10573,29.10362,92.95,"Soguksu Mahallesi, Cubuklu",Beykoz
+56,41.10282,29.0975,57.02,"Yeni Riva Yolu, Ruzgarlibahce Mahallesi, Cubuklu",Beykoz
+57,41.09068,29.09387,58.93,"Medipol Universitesi Kavacik Yerleskesi, Yeni Riva Yolu, Kavacik Mahallesi, Anadolu Hisari",Beykoz
+58,41.08493,29.01222,93.75,"Levent Mahallesi, Levent",Besiktas
+59,41.09269,29.02156,84.6,"Org. Izzettin Akarsular Caddesi, Konaklar Mahallesi, Levent",Besiktas
+60,41.09154,29.04716,4.22,"Baltalimani Mahallesi, Rumeli Hisari",Sariyer
+61,41.09663,29.05287,8.13,"Baltalimani Mahallesi, Rumeli Hisari",Sariyer
+62,41.0525,29.00924,82.52,"Yildiz Teknik Universitesi, Barbaros Bulvari, Cihannuma Mahallesi, Abbasaga Mahallesi",Besiktas
+63,41.06496,29.01231,93.91,"Esentepe Mahallesi, Esentepe",Sisli
+64,41.04764,29.0078,93.67,"Barbaros Bulvari, Cihannuma Mahallesi, Abbasaga Mahallesi",Besiktas
+65,41.04229,29.00669,84.76,"Sinan Pasa Camisi, Besiktas Caddesi, Sinanpasa, Sinanpasa Mahallesi, Abbasaga Mahallesi",Besiktas
+66,41.15269,29.03208,68.77,"Sariyer - Cayirbasi Yolu, Cumhuriyet",Sariyer
+67,41.14705,29.02773,78.02,"Haci Osman Bayiri Caddesi, Cumhuriyet",Sariyer
+68,41.13808,29.02589,93.34,Camlitepe,Sariyer
+69,41.12442,29.02346,91.77,"Buyukdere Caddesi, Camlitepe",Sariyer
+70,41.11388,29.02464,88.42,"Yildiz Teknik Universitesi Ayazaga Kampusu, Buyukdere Caddesi, Huzur, Maslak",Sariyer
+71,41.10941,29.02449,90.57,"Noramin Is Merkezi, Buyukdere Caddesi, Huzur, Maslak",Sariyer
+72,41.10745,29.01597,91.74,"Opet Sariyer, No: 219, Buyukdere Caddesi, Huzur, Maslak",Sariyer
+73,41.09661,29.00614,79.84,Maslak,Sariyer
+74,41.09013,29.0057,93.42,"Emniyetevleri Mahallesi, Sirintepe",Besiktas
+75,41.08518,29.00774,77.85,"Emniyetevleri Mahallesi, Levent",Besiktas
+76,41.07355,29.01566,94.01,"Buyukdere Caddesi, Esentepe Mahallesi, Esentepe",Sisli
+77,41.14046,29.02964,8.73,"Tarabya Bayiri Caddesi, Camlitepe",Sariyer
+78,41.13574,29.04645,5.17,"Tarabya Bayiri Caddesi, Tarabya",Sariyer
+79,41.10822,29.02508,93.48,"Istanbul Teknik Universitesi, Hatira ormani yuruyus yolu, Istanbul Teknik Universitesi, Resitpasa Mahallesi, Emirgan, Sariyer, Istanbul, Marmara Bolgesi, 34467",Turki
+80,41.11188,29.03972,42.15,"Katar Caddesi, Resitpasa Mahallesi, Emirgan",Sariyer
+81,41.11046,29.05005,39.28,"Emirgan Korusu, Katar Caddesi, Resitpasa Mahallesi, Emirgan",Sariyer
+82,41.02012,28.95873,92.65,"Meshur Unkapani Pilavcisi, Ataturk Bulvari, Cibali Mahallesi, Zeyrek",Fatih
+83,41.0034,28.95349,68.35,"Hotel sur 2, Mahramaci Sokak, Aksaray Mahallesi, Aksaray",Fatih
+84,41.08889,28.86549,59.3,"Ataturk Bulvari, 50. Yil Mahallesi, Sultanciftligi",Sultangazi
+85,41.08446,28.8716,63.78,"Cumhuriyet Mahallesi, Eski Edirne Asfalti, Sultanciftligi Mahallesi, Sultanciftligi",Sultangazi
+86,41.07515,28.88242,67.51,"Karadeniz Mahallesi, Eski Edirne Asfalti, Hurriyet Mahallesi, Kucukkoy",Gaziosmanpasa
+87,41.07209,28.88847,30.53,"Ipek Hali, Eski Edirne Asfalti, Hurriyet Mahallesi, Kucukkoy",Gaziosmanpasa
+88,41.06507,28.90031,29.06,"Roadhouse Cafe (Paradise Pizza), Eski Edirne Asfalti, Hurriyet Mahallesi, Kucukkoy",Gaziosmanpasa
+89,41.05994,28.90306,69.44,"Eski Edirne Asfalti, Hurriyet Mahallesi, Kucukkoy",Gaziosmanpasa
+90,41.05175,28.91087,10.23,"GO, Rami Kisla Caddesi, Muratpasa Mahallesi, Muratpasa",Bayrampasa
+91,41.04457,28.91664,33.99,"Rami Kisla Caddesi, Topcular Mahallesi, Rami",Bayrampasa
+92,41.03554,28.92449,14.9,"Topcular Mahallesi, Rami",Eyupsultan
+93,41.03044,28.93669,43.67,"Macar Kardesler Caddesi, Dervis Ali Mahallesi, Balat",Fatih
+94,41.02537,28.94039,68.83,"Aga Turk Mutfagi, Fevzi Pasa Caddesi, Dervis Ali Mahallesi, Karagumruk",Fatih
+95,41.01704,28.95007,60.53,"Millet Yazma Eser Kutuphanesi, Feyzullah Efendi Sokagi, Iskenderpasa Mahallesi",Fatih
+96,41.01348,28.95635,59.8,"15 Temmuz Sehitleri Caddesi, Kemalpasa Mahallesi, Vefa",Fatih
+97,41.03783,28.93877,10.01,"Defterdar Mahallesi, Eyup Semt",Eyupsultan
+98,41.04065,28.93657,14.16,"Ayvansaray Kavsagi, Defterdar Mahallesi, Eyup Semt",Eyupsultan
+99,41.0389,28.93889,92.93,"Savaklar Cad., Defterdar Mahallesi, Eyup Semt",Eyupsultan
+100,41.03145,28.93539,93.36,"Defterdar Mahallesi, Eyup Semt",Eyupsultan
+101,41.02079,28.92418,89.71,Maltepe Mahallesi,Zeytinburnu
+102,41.01329,28.92105,83.29,"Profesor Doktor Necmettin Erbakan Caddesi, Merkezefendi Mahallesi, Seyitnizam",Zeytinburnu
+103,41.00894,28.92147,68.95,"Profesor Doktor Necmettin Erbakan Caddesi, Merkezefendi Mahallesi, Seyitnizam",Zeytinburnu
+104,40.99041,28.91896,80.86,"Kazlicesme Mahallesi, Telsiz",Zeytinburnu
+105,41.01876,28.91779,43.29,"Merkezefendi Mahallesi, Seyitnizam",Zeytinburnu
+106,41.01566,28.93231,88.16,"Burger King, Turgut Ozal Millet Caddesi, Haseki Sultan Mahallesi, Sehremini",Fatih
+107,41.01205,28.93941,77.86,"Sark hali, Turgut Ozal Millet Caddesi, Haseki Sultan Mahallesi, Sehremini",Fatih
+108,41.01024,28.94555,34.87,"Afiyet Olsun??, Turgut Ozal Millet Caddesi, Haseki Sultan Mahallesi, Sehremini",Fatih
+109,41.00959,28.9612,30.44,"Hasanpasa konagi, Ordu Caddesi, Balabanaga Mahallesi, Beyazit",Fatih
+110,40.99448,28.88798,50.46,"Ekrem Kurt Bulvari, Osmaniye Mahallesi",Bakirkoy
+111,40.98863,28.88459,82.39,"Sakizagaci Mahallesi, Yenimahalle Mahallesi",Bakirkoy
+112,40.97911,28.88503,49.65,"Sakizagaci Mahallesi, Cevizlik",Bakirkoy
+113,40.98518,28.80009,93.28,"Yesilkoy Caddesi, Senlik Mahallesi, Florya",Bakirkoy
+114,40.97605,28.80494,93.84,"Yesilkoy Caddesi, Senlik Mahallesi, Florya",Bakirkoy
+115,40.96708,28.80553,93.38,"Yesilkoy Caddesi, Senlik Mahallesi, Florya",Bakirkoy
+116,41.08856,28.80164,66.96,"Ataturk Bulvari, Organize Sanayi Bolgesi Mahallesi, Ikitelli",Basaksehir
+117,41.07627,28.8093,68.43,"Ataturk Bulvari, Organize Sanayi Bolgesi Mahallesi, Ikitelli",Basaksehir
+118,41.07326,28.81034,69.19,"Ataturk Bulvari, Organize Sanayi Bolgesi Mahallesi, Ikitelli",Basaksehir
+119,41.06073,28.8114,93.66,"Basin Ekspress Yolu, Mehmet Akif Mahallesi, Atakent",Bahcelievler
+120,41.04974,28.80821,94.04,"Bahariye Caddesi, Mehmet Akif Mahallesi, Atakent",Kucukcekmece
+121,41.04586,28.80784,94.09,"Ataturk Mahallesi, Mahmutbey Mahallesi",Bagcilar
+122,41.03682,28.81062,94.11,"Halkali Merkez, Halkali",Kucukcekmece
+123,41.02727,28.81087,93.98,"15 Temmuz Mahallesi, Gunesli",Bagcilar
+124,41.01962,28.81195,93.37,"Basin Ekspress Yolu, Mehmet Akif Mahallesi, Atakent",Bahcelievler
+125,41.01154,28.81231,93.96,"K183, Basin Ekspress Yolu, Mehmet Akif Mahallesi, Atakent",Bahcelievler
+126,41.00217,28.81516,93.94,"15 Temmuz Sehitleri Anadolu Imam Hatip Lisesi, Basin Ekspress Yolu, Mehmet Akif Mahallesi, Atakent",Bahcelievler
+127,40.99227,28.81827,60.51,"Basin Ekspress Yolu, Yesilkoy Mahallesi, Yesilkoy",Bakirkoy
+128,40.98392,28.82025,92.56,"I Bolge Mudurlugu, Basin Ekspress Yolu, Yesilkoy Mahallesi, Yesilkoy",Bakirkoy
+129,40.98483,28.83052,92.44,"Yesilyurt Mahallesi, Yesilkoy",Bakirkoy
+130,40.97923,28.84068,93.95,"Yesilyurt Mahallesi, Yesilkoy",Bakirkoy
+131,40.96711,28.83368,93.68,"Yesilyurt Mahallesi, Yesilkoy",Bakirkoy
+132,41.07202,28.87766,94.01,"Metris Esenler Baglantisi, Cevatpasa Mahallesi, Atisalani",Esenler
+133,41.06658,28.88159,94.01,"Metris Esenler Baglantisi, Cevatpasa Mahallesi, Atisalani",Esenler
+134,41.05893,28.88566,94.02,"Metris Esenler Baglantisi, Cevatpasa Mahallesi, Atisalani",Esenler
+135,41.04557,28.88459,79.25,,Edirn
+136,41.03835,28.88811,90.71,"Yavuz Selim Mahallesi, Esenler Merkez",Esenler
+137,41.03382,28.89623,93.83,"Namik Kemal Mahallesi, Esenler Merkez",Esenler
+138,41.02767,28.89894,91.41,"Namik Kemal Mahallesi, Ciftehavuzlar",Bayrampasa
+139,41.07331,28.09101,4,"D100, Gumusyaka, Canta",Silivri
+140,41.06885,28.10432,4.86,"D100, Gumusyaka, Canta",Silivri
+141,41.07402,28.12104,4.67,"D100, Semizkumlar, Celtik",Silivri
+142,41.08447,28.13485,4.77,"Semizkumlar, Celtik",Silivri
+143,41.09072,28.14333,4.24,"Semizkumlar, Celtik",Silivri
+144,41.09393,28.14687,4.59,"Semizkumlar, Celtik",Silivri
+145,41.10496,28.15769,4.83,"Semizkumlar, Yolcati",Silivri
+146,41.10902,28.16262,3.92,"Semizkumlar, Yolcati",Silivri
+147,41.11407,28.17242,5.51,"Yolcati, Seymen",Silivri
+148,41.117,28.18294,2.01,"Kucukkilicli, Alipasa",Silivri
+149,41.10942,28.26152,1.98,Yenimahalle,Silivri
+150,41.10163,28.25696,1.66,Piri Mehmet Pasa,Silivri
+151,41.08917,28.24914,1.71,Piri Mehmet Pasa,Silivri
+152,41.08297,28.24079,4.12,Piri Mehmet Pasa,Silivri
+153,41.06058,28.37484,23.26,"Selimpasa Mahallesi, Selimpasa",Silivri
+154,41.06948,28.384,22.28,"O-3, Selimpasa Mahallesi, Selimpasa",Silivri
+155,41.05474,28.46739,1.41,"Kumburgaz Mahallesi, Kumburgaz",Buyukcekmece
+156,41.04236,28.46884,2.21,"Kumburgaz TEM Baglanti Yolu, Kumburgaz Mahallesi, Kumburgaz",Buyukcekmece
+157,41.03592,28.46091,1.43,"Kumburgaz TEM Baglanti Yolu, Kumburgaz Mahallesi, Kumburgaz",Buyukcekmece
+158,41.02997,28.45953,1.04,"Kumburgaz Mahallesi, Kumburgaz",Buyukcekmece
+159,41.08778,28.51052,3.84,,Edirn
+160,41.13362,28.46932,6.96,"D569, Ferhatpasa Mahallesi",Catalca
+161,41.12529,28.48115,4.19,"D569, Ferhatpasa Mahallesi",Catalca
+162,41.1215,28.49319,4.22,"D569, Ferhatpasa Mahallesi, Ahmediye",Buyukcekmece
+163,41.11309,28.50109,4.35,"D569, Ferhatpasa Mahallesi, Ahmediye",Buyukcekmece
+164,41.10296,28.50775,7.94,"D569, Ferhatpasa Mahallesi, Ahmediye",Buyukcekmece
+165,41.09589,28.51185,9.04,"D569, Ahmediye Mahallesi, Ahmediye",Buyukcekmece
+166,41.08678,28.51493,12.14,"D569, Muratbey Merkez Mahallesi",Catalca
+167,41.08507,28.51563,4.78,"D569, Muratbey Merkez Mahallesi",Catalca
+168,41.07634,28.52263,3.71,"D569, Ulus Mahallesi, Ahmediye",Buyukcekmece
+169,41.06897,28.5276,4.15,"D569, Ahmediye Mahallesi, Ahmediye",Buyukcekmece
+170,41.05634,28.53632,5.36,"D569, Hurriyet Mahallesi, Tepecik",Buyukcekmece
+171,41.04994,28.54259,4.17,"D569, Ulus Mahallesi, Tepecik",Buyukcekmece
+172,41.04357,28.54503,4.6,"D569, Ulus Mahallesi, Tepecik",Buyukcekmece
+173,41.03559,28.5514,5.58,"Ulus Mahallesi, Tepecik",Buyukcekmece
+174,41.02719,28.55591,6.41,"D569, Ulus Mahallesi, Tepecik",Buyukcekmece
+175,41.01885,28.5633,8.36,"Mimar Sinan Merkez Mahallesi, Tepecik",Buyukcekmece
+176,41.08455,28.62976,18.91,"Akcaburgaz Mh., Kirac",Esenyurt
+177,41.08083,28.62613,93.36,"34-84, Alkent 2000 Mahallesi",Buyukcekmece
+178,41.06839,28.62032,65.88,"turkey house, Hadimkoy Yolu Caddesi, Cakmakli Mahallesi, Kirac",Esenyurt
+179,41.05635,28.62634,65.92,"Golsehir Evleri, Hadimkoy Yolu Caddesi, Cakmakli Mahallesi, Kirac",Esenyurt
+180,41.05141,28.62795,61.56,"Hadimkoy Yolu Caddesi, Cakmakli Mahallesi, Kirac",Esenyurt
+181,41.04424,28.62765,64.77,"Hadimkoy Yolu Caddesi, Cakmakli Mahallesi, Kirac",Esenyurt
+182,41.03481,28.62314,93.45,"Hadimkoy Yolu, Cakmakli Mahallesi",Buyukcekmece
+183,41.02403,28.62872,32.12,"Istanbul cd., Cumhuriyet Mahallesi, Esenyurt, Istanbul, Marmara Bolgesi, 34522",Turki
+184,41.0165,28.62624,23.76,Cumhuriyet Mahallesi,Buyukcekmece
+185,41.05303,28.68315,29.16,Ardicli Mahallesi,Esenyurt
+186,41.04506,28.69057,93.57,Ardicli,Esenyurt
+187,41.03379,28.68684,93.75,"Talatpasa Mh., Esenyurt Belediyesi",Esenyurt
+188,41.02681,28.68434,93.93,"Talatpasa Mh., Esenyurt Belediyesi",Esenyurt
+189,41.01757,28.67919,93.9,"Talatpasa Mh., Haramidere Gokdelenler Bolgesi",Esenyurt
+190,41.00594,28.6778,62.63,"Londra Asfalti, Namik Kemal, Haramidere Gokdelenler Bolgesi",Esenyurt
+191,41.00199,28.67702,15.71,"34-85, Yakuplu Mahallesi, Yakuplu",Beylikduzu
+192,41.02571,28.96837,92.81,"Refik Saydam Caddesi, Bedrettin Mahallesi, Kasimpasa",Beyoglu
+193,41.01805,28.97159,52.67,"BALIK EKMEK, Ragip Gumuspala Caddesi, Rustempasa Mahallesi, Tahtakale",Fatih
+194,41.02318,28.97107,39.98,"Galata Bedesteni, Tersane Caddesi, Arap Cami Mahallesi, Arapcami",Beyoglu
+195,41.03675,28.98141,92.58,"?? ???? ?????, Tarlabasi Bulvari, Sehit Muhtar, Tarlabasi",Beyoglu
+196,41.03339,28.97433,93.62,"Tepebasi, Refik Saydam Caddesi, Kamer Hatun, Istiklal",Beyoglu
+197,41.02761,28.96946,93.81,"Sishane 4, Refik Saydam Caddesi, Bedrettin, Bedrettin Mahallesi, Kasimpasa",Beyoglu
+198,41.03736,28.99316,6.32,"Teknik Universite, Inonu Caddesi, Omer Avni, Omer Avni Mahallesi, Purtelas",Beyoglu
+199,41.04184,28.98323,5.55,"Marti Istanbul Hotel, Yedi Kuyular Caddesi, Kocatepe Mahallesi, Taksim",Beyoglu
+201,41.06596,28.97803,91.81,"Piyalepasa Bulvari, Kaptanpasa Mahallesi, Okmeydani",Sisli
+202,41.05737,28.9719,93.66,"Mahmut Sevket Pasa Mahallesi, Okmeydani",Sisli
+203,41.05264,28.96763,93.66,"Mahmut Sevket Pasa Mahallesi, Okmeydani",Sisli
+204,41.04062,28.96664,94.08,"Piyalepasa Bulvari, Kaptanpasa Mahallesi, Kucuk Piyale",Beyoglu
+205,41.03853,28.97188,83.52,"Kurtulus Deresi Caddesi, Sururi Mehmet Efendi, Bostan",Beyoglu
+206,41.04252,28.98114,13.46,"Eskisehir Mahallesi, Pangalti",Sisli
+209,41.06565,28.95114,10.22,"Hasbahce Caddesi, Nurtepe Mahallesi, Kagithane Merkez",Kagithane
+210,41.09591,28.98215,77.92,"Cendere Yolu, Seyrantepe Mahallesi, Seyrantepe",Kagithane
+211,41.08523,28.97874,72.45,"HALIC UNIVERSITESI, Cendere Yolu, Merkez Mahallesi, Kagithane Merkez",Kagithane
+212,41.07939,28.97252,91.04,"Merkez Mahallesi, Kagithane Merkez",Kagithane
+213,41.07397,28.96835,75.01,"Merkez Mahallesi, Kagithane Merkez",Kagithane
+214,41.06598,28.95743,59.4,"Mehmet Akif Ersoy Mahallesi, Gursel",Kagithane
+215,41.09011,28.96063,92.58,"Okmeydani Yolu, Guzeltepe Mahallesi, Alibeykoy",Eyupsultan
+216,41.08052,28.96001,93.62,"Okmeydani Yolu, Guzeltepe Mahallesi, Alibeykoy",Eyupsultan
+217,41.07114,28.95663,90.86,"Nurtepe Mahallesi, Kagithane Merkez",Kagithane
+218,41.06166,28.95796,70.46,"Piyalepasa - Kagithane Tuneli, Mehmet Akif Ersoy Mahallesi, Okmeydani",Sisli
+471,41.0911,29.0611,90,fsm,Besiktas

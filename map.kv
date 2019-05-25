@@ -20,20 +20,21 @@
             GridLayout:
                 cols:1
                 Spinner:
+                    id:region
                     background_color: (0, 0, 0, 0.3)
                     color:(0, 0.1, 0.9, 0.9)
                     option_cls: Factory.get("MenuBackChanger")
                     text: "Bolge Seciniz"
                     values: ['Hisarustu','bogazici','kadikoy','bogazici','kadikoya','bogazicia','kadikoyb']
                     font_name : 'Georgia'
+                    on_text:root.pin_map()
                 Spinner:
+                    id: sensor
                     color:(0, 0.1, 0.9, 0.9)
                     background_color: (0, 0, 0, 0.3)
                     option_cls: Factory.get("MenuBackChanger")
                     text: 'Sensor Seciniz'
-                    values: ['fsm koprusu']
                     font_name : 'Georgia'
-                    on_text:root.pin_map()
             GridLayout:
                 cols: 2
                 Label:
@@ -156,13 +157,17 @@
 <MenuBackChanger@SpinnerOption>:
     canvas:
         Color :
-            rgba:(1, 1, 1, 0.4)
+            rgba:(0, 0, 0, 0)
         Rectangle:
             size:self.size
             pos:self.pos
     color:(0, 0, 1, 1)
-    font_size:'17sp'
+    font_size:'25sp'
+
+
 <Options>:
+
+
 <SettingsPopUp>:
     id: settings
     auto_dismiss: False
@@ -178,16 +183,19 @@
         TextInput:
             id:epoch
             text: '3'
+            input_filter: 'int'
         Label:
             text: "Zaman araligi giriniz:"
         TextInput:
             id: time_step
             text: '30'
+            input_filter: 'int'
         Label:
             text: 'Batch boyutunu giriniz:'
         TextInput:
             id:batch
             text:'2048'
+            input_filter: 'int'
         Label:
             text:'Gun bilgisi eklensin mi?'
         Spinner:
@@ -226,7 +234,7 @@
             Image:
                 allow_stretch:True
                 id:graph
-                source:"default.png"
+                source:"epoch_his/default.png"
         BoxLayout:
             size_hint_x : 0.45
             orientation:'vertical'
@@ -272,6 +280,8 @@
     orientation: "vertical"
     BoxLayout:
         orientation: 'vertical'
+        Label:
+            id: header
         GridLayout:
             canvas.before:
                 Color:
@@ -333,3 +343,8 @@
             size_hint: None, None
             text: "Basla"
             on_press: root.go_to_hyper_screen()
+
+
+<MyMarker>:
+
+    on_press: self.update_sensor_spinner_text()
