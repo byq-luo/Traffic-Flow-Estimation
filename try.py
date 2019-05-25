@@ -1,5 +1,4 @@
 from kivy.app import App
-
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
@@ -12,17 +11,13 @@ from kivy.uix.textinput import TextInput
 from kivy.properties import NumericProperty, ObjectProperty, StringProperty, ListProperty, BooleanProperty
 from kivy.uix.image import Image
 from kivy.uix.progressbar import ProgressBar      
-
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.recyclegridlayout import RecycleGridLayout
 from kivy.uix.behaviors import FocusBehavior
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
-
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.garden.mapview import MapView, MapMarker
-
 from kivy.clock import Clock
-
 from train import Train, RegionSelector
 from threading import Thread
 import matplotlib.pyplot as plt
@@ -30,9 +25,6 @@ import numpy as np
 import pandas as pd
 from kivy.clock import mainthread
 
-
-
-file_name = "preprocessed_471_2017.csv"
 
 file_name="results.csv"
 
@@ -113,33 +105,67 @@ class HyperScreen(Screen):
             epoch_history["test"].append(temp_test)
             self.manager.screens[1].update_results(epoch_history, i+1, epochs)
             self.manager.screens[1].ids.progress.value = i+1
+        
         self.train_object.save_estimations(file_name)
         self.manager.screens[2].get_dataframe()
         self.manager.screens[1].ids.results.disabled = False
         self.manager.screens[1].ids.home.disabled = False
         self.build_result_title()
-    
+        self.unpin_map()
+        self.reset_spinners()
+        self.reset_map_zoom()
+
+
     def pin_map(self):
         self.ids.sensor.text = "Sensor Seciniz"
-        if len(self.markers) > 0:
-            for marker in self.markers.values():
-                self.ids.map.remove_marker(marker)
-            self.markers = {}
-
+        self.unpin_map()
+        self.ids.sensor.values = []
         sensors = self.regions.get_sensors(self.ids.region.text)
         for index, row in sensors.iterrows():
-            print(row.ID)
             file = RegionSelector.build_file_name(self.ids.region.text, row.ID)
             exists = RegionSelector.check_data_exist(file)
             marker = MyMarker(self, row.percentage, exists, row.address, lon=row.long, lat=row.lat)
             self.markers[row.ID] = marker
             self.ids.map.add_marker(marker)
             self.ids.sensor.values.append(row.address)
- 
+        self.reset_map_zoom()
+        avg_lat, avg_lon = self.get_center_of_markers()
+        self.ids.map.lat = avg_lat
+        self.ids.map.lon = avg_lon
+        self.ids.map.zoom = 12
+
+    def get_center_of_markers(self):
+        if len(self.markers) == 0:
+            return 41.091602, 29.066435
+        avg_lat = 0
+        avg_lon = 0
+        for marker in self.markers.values():
+            avg_lat += marker.lat
+            avg_lon += marker.lon
+        avg_lat /= len(self.markers)
+        avg_lon /= len(self.markers)
+        return avg_lat, avg_lon
+
+    def reset_map_zoom(self):
+        self.ids.map.lat = 41.091602
+        self.ids.map.lon = 29.066435
+        self.ids.map.zoom = 10
 
     def build_result_title(self):
         title = self.ids.sensor.text + "/" + self.ids.region.text
         self.manager.screens[2].ids.header.text = title
+    
+    def unpin_map(self):
+        if len(self.markers) > 0:
+            for marker in self.markers.values():
+                self.ids.map.remove_marker(marker)
+            self.markers = {}
+
+    def reset_spinners(self):
+        self.ids.region.text = "Bolge Seciniz"
+        self.ids.sensor.text = "Sensor Seciniz"
+        self.ids.sensor.values = []
+    
    
 class SettingsPopUp(Popup):
     pass
@@ -150,9 +176,9 @@ class TrainScreen(Screen):
         self.ids.header.text = "EPOK: " + str(current_epoch) + "/" + str(max_epoch)
         self.save_epoch_history_figure(epoch_history, current_epoch, max_epoch)
         self.update_image()
-        epoch_info_text = self.ids.header.text + "\n"
-        epoch_info_text += "Eğitim MAPE: " + str(epoch_history["train"][current_epoch-1]) + "\n"
-        epoch_info_text += "Test MAPE: " + str(epoch_history["test"][current_epoch-1])
+        #epoch_info_text = self.ids.header.text + "\n"
+        epoch_info_text = "Eğitim MAPE: " + str(round(epoch_history["train"][current_epoch-1],3)) + "\n"
+        epoch_info_text += "Test    MAPE: " + str(round(epoch_history["test"][current_epoch-1],3))
         self.ids.result.text = epoch_info_text
 
     def see_all_results_button_click(self):
@@ -167,6 +193,8 @@ class TrainScreen(Screen):
         self.manager.screens[1].ids.results.disabled = True
         self.manager.screens[1].ids.home.disabled = True
         self.manager.current = "hyper"
+        
+
 
     def save_epoch_history_figure(self, epoch_history, current_epoch, max_epoch):
         indexes = [i for i in range(1, 1 + len(epoch_history["train"]))]
