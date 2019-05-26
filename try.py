@@ -37,7 +37,7 @@ class MapApp(App):
         sm = ScreenManager()
 
         home = HomeScreen(name="home")
-        hyper = HyperScreen(name='hyper')
+        hyper = HyperScreen(self, name='hyper')
         train = TrainScreen(name="train")
         results = ResultsScreen(name='res')
 
@@ -55,14 +55,14 @@ class MapApp(App):
 
 class HyperScreen(Screen):
 
-    def __init__(self,*args, **kwargs):
+    def __init__(self, app,*args, **kwargs):
         super(HyperScreen, self).__init__(*args, **kwargs)
+        self.app = app
         self.regions = RegionSelector()
         self.settings_popup = SettingsPopUp()
         self.preprocess_popup = PreprocessPopup()
         self.markers = {}
         self.ids.region.values = self.regions.get_provinces()
-    
     
     def settings_button_click(self):
         self.settings_popup.open()
@@ -71,6 +71,7 @@ class HyperScreen(Screen):
         self.manager.screens[1].ids.progress.max = int(self.settings_popup.ids.epoch.text)
         self.manager.screens[1].ids.progress.value = 0
         self.manager.current = self.manager.screens[1].name
+        self.app.title = self.build_result_title()
         self.weekday = True
         if self.settings_popup.ids.day.text == 'Hayir':
             self.weekday = False
@@ -89,6 +90,7 @@ class HyperScreen(Screen):
         epoch_history = {"train": train_loss_history, "test":test_loss_history}
         id = self.regions.find_id_from_address(self.ids.sensor.text)
         source_name = RegionSelector.build_file_name(self.ids.region.text, id)
+        
         if RegionSelector.check_data_exist(source_name) == False:
             self.preprocess_popup.open()
             RegionSelector.pull_data_from_database(id, self.ids.region.text)
@@ -123,7 +125,6 @@ class HyperScreen(Screen):
         self.unpin_map()
         self.reset_spinners()
         self.reset_map_zoom()
-
 
     def pin_map(self):
         self.ids.sensor.text = "Sensor Seciniz"
@@ -161,8 +162,7 @@ class HyperScreen(Screen):
         self.ids.map.zoom = 10
 
     def build_result_title(self):
-        title = self.ids.sensor.text + "/" + self.ids.region.text
-        self.manager.screens[2].ids.header.text = title
+        return self.ids.sensor.text + "/" + self.ids.region.text
     
     def unpin_map(self):
         if len(self.markers) > 0:
@@ -199,6 +199,7 @@ class TrainScreen(Screen):
 
     def go_back_button(self):
         self.reset_screen()
+        self.manager.screens[0].app.title = self.manager.screens[0].app.default_title
         self.manager.screens[1].ids.results.disabled = True
         self.manager.screens[1].ids.home.disabled = True
         self.manager.current = "hyper"
@@ -251,6 +252,7 @@ class ResultsScreen(Screen):
         self.manager.current = "train"
 
     def go_home_button(self):
+        self.manager.screens[0].app.title = self.manager.screens[0].app.default_title
         self.manager.screens[1].ids.results.disabled = True
         self.manager.screens[1].ids.home.disabled = True
         self.manager.screens[1].reset_screen()
