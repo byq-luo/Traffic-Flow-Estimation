@@ -276,11 +276,11 @@ class MyMarker(MapMarker):
         super(MyMarker, self).__init__(*args, **kwargs)
         self.screen = screen
         if percentage < 80:
-            self.source = "./marker_ims/red.jpeg"
+            self.source = "./marker_ims/red.png"
         elif has_data:
-            self.source = "./marker_ims/green.jpeg"
+            self.source = "./marker_ims/green.png"
         else:
-            self.source = "./marker_ims/yellow.jpeg"
+            self.source = "./marker_ims/yellow.png"
         
         self.address = address
         
