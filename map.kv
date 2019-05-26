@@ -37,6 +37,9 @@
                     text: 'Sensor Seciniz'
                     font_name : 'Georgia'
                     font_size:'20sp'
+                    text_size: self.size
+                    halign:'center'
+                    valign: 'center'
                     
             GridLayout:
                 cols: 2
@@ -171,8 +174,11 @@
         Rectangle:
             size:self.size
             pos:self.pos
-    color:(0, 0, 1, 1)
-    font_size:'17sp'
+    color:(1, 1, 1, 1)
+    font_size:'12sp'
+    text_size: self.size
+    halign:'center'
+    valign:'center'
 
 <PreprocessPopup>:
     auto_dismiss: False
