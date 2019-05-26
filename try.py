@@ -79,7 +79,12 @@ class HyperScreen(Screen):
         self.daypart = True
         if self.settings_popup.ids.daypart.text == "Hayir":
             self.daypart = False
-
+        
+        self.prev_weeks = 0
+        if self.settings_popup.ids.prev_weeks.text == "1 ve 2 hafta":
+            self.prev_weeks = 1
+        elif self.settings_popup.ids.prev_weeks.text == "1, 2 ve 3 hafta":
+            self.prev_weeks = 2
         self.train_thread = Thread(target=self.fit, args=(int(self.settings_popup.ids.epoch.text),))
         self.train_thread.setDaemon(True)
         self.train_thread.start()
@@ -105,7 +110,7 @@ class HyperScreen(Screen):
         self.ids.test_start.text,
         self.ids.test_end.text,
         int(self.settings_popup.ids.time_step.text),
-        0,
+        self.prev_weeks,
         self.daypart
         )       
         for i in range(epochs):
