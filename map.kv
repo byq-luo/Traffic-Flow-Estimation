@@ -40,6 +40,7 @@
                     text_size: self.size
                     halign:'center'
                     valign: 'center'
+                    on_text: root.on_sensor_spinner_text_change()
                     
             GridLayout:
                 cols: 2
@@ -168,12 +169,6 @@
 
 
 <MenuBackChanger@SpinnerOption>:
-    canvas:
-        Color :
-            rgba:(0, 0, 0, 0)
-        Rectangle:
-            size:self.size
-            pos:self.pos
     color:(1, 1, 1, 1)
     font_size:'12sp'
     text_size: self.size
@@ -182,13 +177,18 @@
 
 <PreprocessPopup>:
     auto_dismiss: False
+    title: "Veri hazirlaniyor. Bu islem birkac dakika surebilir..."
+    size: (400, 150)
+    size_hint: (None, None)
     BoxLayout:
+        orientation:'vertical'
         Label:
             id:state
-            text: "Veri on isleme birkac dakika surebilir."
+            text: "Veri tabanindan gerekli hiz bilgisi cekiliyor"
         ProgressBar:
             id:progress
             max:100
+
         
 <SettingsPopUp>:
     id: settings

@@ -62,6 +62,7 @@ class HyperScreen(Screen):
         self.settings_popup = SettingsPopUp()
         self.preprocess_popup = PreprocessPopup()
         self.markers = {}
+        self.current_marker_id = -1
         self.ids.region.values = self.regions.get_provinces()
     
     def settings_button_click(self):
@@ -149,6 +150,15 @@ class HyperScreen(Screen):
         self.ids.map.lon = avg_lon
         self.ids.map.zoom = 12
 
+    def focus_marker(self):
+        id = self.regions.find_id_from_address(self.ids.sensor.text)
+        self.markers[id].source = "./marker_ims/blue.png"
+        self.current_marker_id = id
+
+    def release_marker_fouce(self):
+        self.markers[self.current_marker_id].source = self.markers[self.current_marker_id].default_source
+        self.current_marker_id = -1
+
     def get_center_of_markers(self):
         if len(self.markers) == 0:
             return 41.091602, 29.066435
@@ -179,7 +189,13 @@ class HyperScreen(Screen):
         self.ids.region.text = "Bolge Seciniz"
         self.ids.sensor.text = "Sensor Seciniz"
         self.ids.sensor.values = []
-    
+
+    def on_sensor_spinner_text_change(self):
+        if self.current_marker_id != -1:
+            self.release_marker_fouce()
+        
+        if self.ids.sensor.text != "Sensor Seciniz":
+            self.focus_marker()
    
 class SettingsPopUp(Popup):
     pass
@@ -281,7 +297,7 @@ class MyMarker(MapMarker):
             self.source = "./marker_ims/green.png"
         else:
             self.source = "./marker_ims/yellow.png"
-        
+        self.default_source = self.source
         self.address = address
         
 
