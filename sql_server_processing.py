@@ -3,7 +3,7 @@ import file_operations as fo
 
 
 class DB_Definitions:
-    server_name = "MAG"
+    server_name = "localhost\MSSQLSERVER02"
     database_name = "FusedData-2016-2017-2018"
     number_of_data_points = 7252
 

@@ -44,7 +44,7 @@ def detect_outlier_for_batch(l, sigma):
 
 
 def find_outliers_with_convolution(
-        data, time_interval, sigma, column_of_date=0, column_of_speed=1):
+        data, time_interval, sigma, column_of_date=0, column_of_speed=1,popup=None):
     """Convolutes through all the data and finds the outliers within every window.
 
     :param data: Given data. Matrix
@@ -54,11 +54,21 @@ def find_outliers_with_convolution(
     :param column_of_speed: Index of the column of the speed in the data. 1 by default.
     :return: List of indexes of found outliers
     """
+    
+    if popup != None:
+        popup.ids.state.text = "Aykiri veriler temizleniyor..."
+        popup.ids.progress.max = len(data)
+        popup.ids.progress.value = 0
+    
     i = 0
     outlier_indexes = np.array([])
     while i < len(data) - 1:
         percent = i / len(data)
         draw_progress_bar(percent)
+        
+        if popup != None:
+            popup.ids.progress.value = i
+        
         trimmed, temp = trim_the_data(
             data, data[i, column_of_date],
             data[i, column_of_date] + timedelta(minutes=time_interval),
@@ -81,6 +91,7 @@ def trim_the_data(data, starting_datetime, ending_datetime, column_of_date=0, st
     last element pointing out in the real data.
     """
     trimmed_data = np.array([])
+
     for i in range(starting_index, len(data)):
         if starting_datetime <= data[i, column_of_date] < ending_datetime:
             trimmed_data = np.append(trimmed_data, [data[i]])
@@ -89,7 +100,7 @@ def trim_the_data(data, starting_datetime, ending_datetime, column_of_date=0, st
     return data[starting_index:i], i
 
 
-def downsample_the_data(data, starting_date, time_interval, column_of_date=0, column_of_speed=1):
+def downsample_the_data(data, starting_date, time_interval, column_of_date=0, column_of_speed=1,popup=None):
     """Reduces the entry in data.
 
     :param data: Data that needed to be downsamppled.
@@ -99,12 +110,22 @@ def downsample_the_data(data, starting_date, time_interval, column_of_date=0, co
     :param column_of_speed: Where is the speed column in the data
     :return: Returns the downsampled data
     """
+    
+    if popup != None:
+        popup.ids.state.text = "Veri alt ornekleme gerceklestiriliyor..."
+        popup.ids.progress.value = 0
+        popup.ids.progress.max = len(data)
+    
     i = 0
     time_index = 0
     downsampled_data = np.array([])
     while i < len(data) - 1:
         percent = i / len(data)
         draw_progress_bar(percent)
+        
+        if popup != None:
+            popup.ids.progress.value = i
+        
         trimmed, temp = trim_the_data(data,
                                       starting_date + timedelta(minutes=time_index * time_interval),
                                       starting_date + timedelta(minutes=(time_index + 1) * time_interval),
@@ -154,8 +175,8 @@ def split_direction_and_speed(str):
 
 
 def preprocess_and_save_data(
-        load_name, save_name, time_window_outlier, sigma,
-        time_window_downsample, column_of_date=0, column_of_speed=1):
+        load_name, save_name, time_window_outlier=20, sigma=2,
+        time_window_downsample=5, column_of_date=0, column_of_speed=1, popup=None):
     """Reads data from CSV file, removes outliers, downsamples it and saves it to CSV file again.
 
     :param load_name: Name of the file that data will be loaded.
@@ -167,21 +188,20 @@ def preprocess_and_save_data(
     :param column_of_date: Column of date in data. 0 by default.
     :param column_of_speed: column of speed in data. 1 by default.
     """
-    data = pd.read_csv(load_name)
+    data = pd.read_csv(load_name, parse_dates=['Date'])
     print("Data was read from file...")
-    print("Converting str to datetime object...")
 
     vals = data.values
-    for i in range(len(vals)):
-        vals[i, 0] = datetime.strptime(vals[i, 0], datetime_format)
 
     print("\nOutliers will be detected...")
     outliers = find_outliers_with_convolution(
-        vals, time_window_outlier, sigma, column_of_date, column_of_speed
+        vals, time_window_outlier, sigma, column_of_date, column_of_speed, popup=popup
     )
     vals = clean_outliers(vals, outliers)
+    
+
     print("\nData will be downsampled...")
-    downsampled = downsample_the_data(vals, vals[0, column_of_date], time_window_downsample)
+    downsampled = downsample_the_data(vals, vals[0, column_of_date], time_window_downsample,popup=popup)
     data = pd.DataFrame(data=downsampled, columns=data.columns)
     print("\nData will be saved to a CSV file...")
     data.to_csv(save_name, index=False)

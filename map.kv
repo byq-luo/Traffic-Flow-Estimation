@@ -173,9 +173,17 @@
             pos:self.pos
     color:(0, 0, 1, 1)
     font_size:'17sp'
-<Options>:
 
-
+<PreprocessPopup>:
+    auto_dismiss: False
+    BoxLayout:
+        Label:
+            id:state
+            text: "Veri on isleme birkac dakika surebilir."
+        ProgressBar:
+            id:progress
+            max:100
+        
 <SettingsPopUp>:
     id: settings
     auto_dismiss: False
@@ -268,7 +276,6 @@
                     font_size:'22sp'
                     text:'Progress Bar'
                 ProgressBar:
-                    text: "no title"
                     id: progress
                     max: 100
             BoxLayout:

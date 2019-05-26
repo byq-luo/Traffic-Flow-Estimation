@@ -32,7 +32,8 @@ file_name="results.csv"
 class MapApp(App):
     
     def build(self):
-        self.title = "Trafik Akis Hizi Tahmini"
+        self.default_title = "Trafik Akis Hizi Tahmini" 
+        self.title = self.default_title
         sm = ScreenManager()
 
         home = HomeScreen(name="home")
@@ -54,28 +55,31 @@ class MapApp(App):
 
 class HyperScreen(Screen):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,*args, **kwargs):
         super(HyperScreen, self).__init__(*args, **kwargs)
         self.regions = RegionSelector()
-        self.popup = SettingsPopUp()
+        self.settings_popup = SettingsPopUp()
+        self.preprocess_popup = PreprocessPopup()
         self.markers = {}
         self.ids.region.values = self.regions.get_provinces()
+    
+    
     def settings_button_click(self):
-        self.popup.open()
+        self.settings_popup.open()
 
     def start_train_button(self):
-        self.manager.screens[1].ids.progress.max = int(self.popup.ids.epoch.text)
+        self.manager.screens[1].ids.progress.max = int(self.settings_popup.ids.epoch.text)
         self.manager.screens[1].ids.progress.value = 0
         self.manager.current = self.manager.screens[1].name
         self.weekday = True
-        if self.popup.ids.day.text == 'Hayir':
+        if self.settings_popup.ids.day.text == 'Hayir':
             self.weekday = False
         
         self.daypart = True
-        if self.popup.ids.daypart.text == "Hayir":
+        if self.settings_popup.ids.daypart.text == "Hayir":
             self.daypart = False
 
-        self.train_thread = Thread(target=self.fit, args=(int(self.popup.ids.epoch.text),))
+        self.train_thread = Thread(target=self.fit, args=(int(self.settings_popup.ids.epoch.text),))
         self.train_thread.setDaemon(True)
         self.train_thread.start()
 
@@ -85,6 +89,11 @@ class HyperScreen(Screen):
         epoch_history = {"train": train_loss_history, "test":test_loss_history}
         id = self.regions.find_id_from_address(self.ids.sensor.text)
         source_name = RegionSelector.build_file_name(self.ids.region.text, id)
+        if RegionSelector.check_data_exist(source_name) == False:
+            self.preprocess_popup.open()
+            RegionSelector.pull_data_from_database(id, self.ids.region.text)
+            RegionSelector.preprocess(id, self.ids.region.text, self.preprocess_popup)
+            self.preprocess_popup.dismiss()
 
         self.train_object = Train(
         source_name,
@@ -93,13 +102,13 @@ class HyperScreen(Screen):
         self.ids.train_end.text,
         self.ids.test_start.text,
         self.ids.test_end.text,
-        int(self.popup.ids.time_step.text),
+        int(self.settings_popup.ids.time_step.text),
         0,
         self.daypart
         )       
         for i in range(epochs):
             temp_train, temp_test = self.train_object.fit(
-                int(self.popup.ids.batch.text)
+                int(self.settings_popup.ids.batch.text)
             )
             epoch_history["train"].append(temp_train)
             epoch_history["test"].append(temp_test)
@@ -170,13 +179,13 @@ class HyperScreen(Screen):
 class SettingsPopUp(Popup):
     pass
 
+
 class TrainScreen(Screen):
 
     def update_results(self, epoch_history, current_epoch, max_epoch):     
         self.ids.header.text = "EPOK: " + str(current_epoch) + "/" + str(max_epoch)
         self.save_epoch_history_figure(epoch_history, current_epoch, max_epoch)
         self.update_image()
-        #epoch_info_text = self.ids.header.text + "\n"
         epoch_info_text = "Eğitim MAPE: " + str(round(epoch_history["train"][current_epoch-1],3)) + "\n"
         epoch_info_text += "Test    MAPE: " + str(round(epoch_history["test"][current_epoch-1],3))
         self.ids.result.text = epoch_info_text
@@ -194,8 +203,6 @@ class TrainScreen(Screen):
         self.manager.screens[1].ids.home.disabled = True
         self.manager.current = "hyper"
         
-
-
     def save_epoch_history_figure(self, epoch_history, current_epoch, max_epoch):
         indexes = [i for i in range(1, 1 + len(epoch_history["train"]))]
         fig = plt.figure()
@@ -273,6 +280,11 @@ class MyMarker(MapMarker):
 
     def update_sensor_spinner_text(self):
         self.screen.ids.sensor.text = self.address
+
+
+class PreprocessPopup(Popup):
+    pass
+
 
 MapApp().run()
 

@@ -2,10 +2,10 @@ import build_model as bm
 import pandas as pd
 import numpy as np
 from datetime import datetime
-
+import sql_server_processing as ssp
 from keras.models import Sequential
 from keras.layers import Dense, Flatten, LSTM, Dropout
-        
+from data_preprocessing import preprocess_and_save_data      
 import os
 
 datetime_format = "%d-%m-%Y %H:%M"
@@ -95,10 +95,8 @@ class Train:
         self.regressor = regressor
         self.sc = sc
 
-    def save_estimations(self, file_name):
-        
+    def save_estimations(self, file_name):  
         results = self.regressor.predict(self.x_test)
-
         real_values = pd.DataFrame(index = self.test.index, 
                                 data = bm.inverse_scale(self.sc, self.y_test.reshape(-1, 1)),
                                 columns = ['Real'])
@@ -109,7 +107,7 @@ class Train:
 
         predictions = pd.concat([real_values, predictions], axis = 1)
 
-        predictions.to_csv(file_name)
+        predictions.to_csv(file_name, date_format="%d/%m/%Y %H:%M:%S")
 
     def fit(self, batch_size):
 
@@ -121,7 +119,6 @@ class Train:
             validation_data=(self.x_test, self.y_test)
         )
         return losses.history["loss"][0], losses.history["val_loss"][0] 
-
 
 
 class RegionSelector:
@@ -146,3 +143,31 @@ class RegionSelector:
     def find_id_from_address(self, address):
         data = self.data[self.data.address == address]
         return data.ID.values[0]
+    
+    @staticmethod
+    def pull_data_from_database(id, region):
+        cnxn = ssp.connect_to_server(ssp.build_connection_str(
+            ssp.DB_Definitions.server_name, ssp.DB_Definitions.database_name
+        ))
+        query = "select * from FusedData2017 where vSegID = " + str(id) + "and vSegDir = 0"
+        cursor = ssp.run_sql_query(cnxn.cursor(), query)
+        data = {}
+        for row in cursor:
+            data[row[2]] = row[-1]
+        data = pd.DataFrame.from_dict(data=data, columns=['Speed'], orient='index')
+        data.index.name = 'Date'
+        data.sort_index(inplace=True)
+        try:
+            os.mkdir("speed_data/" + region)
+        except FileExistsError:
+            pass
+        path = "speed_data/" + region + "/raw_" + str(id) + "_2017.csv"
+        data.to_csv(path)
+    
+    @staticmethod
+    def preprocess(id, region, preprocess_popup):
+        load_path = "speed_data/" + region + "/raw_" + str(id) + "_2017.csv"
+        save_path = "speed_data/" + region + "/preprocessed_" + str(id) + "_2017.csv"
+        preprocess_and_save_data(load_path, save_path, popup=preprocess_popup)
+
+
