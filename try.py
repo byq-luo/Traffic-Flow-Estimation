@@ -24,10 +24,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from kivy.clock import mainthread
+from tkinter.messagebox import showerror
+import tkinter as tk
+from datetime import datetime
 
 
+tk.Tk().withdraw()
 file_name="results.csv"
-
+datetime_format = "%d-%m-%Y %H:%M"
 
 class MapApp(App):
     
@@ -68,7 +72,31 @@ class HyperScreen(Screen):
     def settings_button_click(self):
         self.settings_popup.open()
 
+    def check_parameters_for_train(self):
+        if self.current_marker_id == -1:
+            showerror("HATA", "Lutfen bolge seciniz")
+            return False
+        elif self.markers[self.current_marker_id].default_source == "./marker_ims/red.png":
+            showerror("HATA", "Sectiginiz bolgede yeterli veri yok. Kirmizi veri noktalari secilememektedir.")
+            return False
+
+        train_start_date = datetime.strptime(self.ids.train_start.text + " 00:00", datetime_format)
+        train_end_date = datetime.strptime(self.ids.train_end.text + " 00:00", datetime_format)
+        test_start_date = datetime.strptime(self.ids.test_start.text + " 00:00", datetime_format)
+        test_end_date = datetime.strptime(self.ids.test_end.text + " 00:00", datetime_format)
+        
+        if train_end_date < train_start_date or test_end_date < test_start_date:
+            showerror("HATA", "Baslangic tarihleri bitis tarihlerinden once olmalidir")
+            return False
+        
+        else:
+            return True
+
+
     def start_train_button(self):
+        if self.check_parameters_for_train() == False:
+            return
+        
         self.manager.screens[1].ids.progress.max = int(self.settings_popup.ids.epoch.text)
         self.manager.screens[1].ids.progress.value = 0
         self.manager.current = self.manager.screens[1].name
@@ -131,6 +159,7 @@ class HyperScreen(Screen):
         self.unpin_map()
         self.reset_spinners()
         self.reset_map_zoom()
+        self.current_marker_id = -1
 
     def pin_map(self):
         self.ids.sensor.text = "Sensor Seciniz"
@@ -155,7 +184,7 @@ class HyperScreen(Screen):
         self.markers[id].source = "./marker_ims/blue.png"
         self.current_marker_id = id
 
-    def release_marker_fouce(self):
+    def release_marker_focus(self):
         self.markers[self.current_marker_id].source = self.markers[self.current_marker_id].default_source
         self.current_marker_id = -1
 
@@ -191,11 +220,12 @@ class HyperScreen(Screen):
         self.ids.sensor.values = []
 
     def on_sensor_spinner_text_change(self):
-        if self.current_marker_id != -1:
-            self.release_marker_fouce()
-        
-        if self.ids.sensor.text != "Sensor Seciniz":
-            self.focus_marker()
+        if self.manager.current == "hyper":
+            if self.current_marker_id != -1:
+                self.release_marker_focus()
+            
+            if self.ids.sensor.text != "Sensor Seciniz":
+                self.focus_marker()
    
 class SettingsPopUp(Popup):
     pass
