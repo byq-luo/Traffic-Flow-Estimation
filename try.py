@@ -1,4 +1,5 @@
 from kivy.app import App
+
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
@@ -18,14 +19,15 @@ from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.garden.matplotlib.backend_kivyagg import FigureCanvasKivyAgg
 from kivy.garden.mapview import MapView, MapMarker
 from kivy.clock import Clock
+from tkinter.messagebox import showerror
+import tkinter as tk
+
 from train import Train, RegionSelector
 from threading import Thread
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from kivy.clock import mainthread
-from tkinter.messagebox import showerror
-import tkinter as tk
 from datetime import datetime
 
 
@@ -76,8 +78,21 @@ class HyperScreen(Screen):
         if self.current_marker_id == -1:
             showerror("HATA", "Lutfen bolge seciniz")
             return False
+        
         elif self.markers[self.current_marker_id].default_source == "./marker_ims/red.png":
             showerror("HATA", "Sectiginiz bolgede yeterli veri yok. Kirmizi veri noktalari secilememektedir.")
+            return False
+
+        elif self.settings_popup.ids.epoch.text == "":
+            showerror("HATA", "Epoch sayisi bos olamaz")
+            return False
+        
+        elif self.settings_popup.ids.time_step.text == "":
+            showerror("HATA", "Zaman sekansi boyutu bos olamaz")
+            return False
+
+        elif self.settings_popup.ids.batch.text == "":
+            showerror("HATA", "Batch boyutu bos olamaz")
             return False
 
         train_start_date = datetime.strptime(self.ids.train_start.text + " 00:00", datetime_format)
@@ -91,7 +106,6 @@ class HyperScreen(Screen):
         
         else:
             return True
-
 
     def start_train_button(self):
         if self.check_parameters_for_train() == False:
@@ -330,7 +344,6 @@ class MyMarker(MapMarker):
         self.default_source = self.source
         self.address = address
         
-
     def update_sensor_spinner_text(self):
         self.screen.ids.sensor.text = self.address
 
